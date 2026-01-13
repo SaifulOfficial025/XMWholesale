@@ -1,0 +1,201 @@
+import React from "react";
+import { FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa";
+import Header from "../Shared/Header";
+
+function Contact() {
+  const [form, setForm] = React.useState({
+    name: "",
+    whatsapp: "",
+    email: "",
+    text: "",
+  });
+  const [errors, setErrors] = React.useState({});
+
+  const validate = () => {
+    const newErrors = {};
+    if (!form.name.trim()) newErrors.name = "Full Name is required";
+    if (!form.email.trim()) newErrors.email = "Email is required";
+    else if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(form.email))
+      newErrors.email = "Invalid email address";
+    if (!form.text.trim()) newErrors.text = "Message is required";
+    return newErrors;
+  };
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const validationErrors = validate();
+    setErrors(validationErrors);
+    if (Object.keys(validationErrors).length === 0) {
+      // Submit form logic here
+      alert("Message sent!");
+      setForm({ name: "", whatsapp: "", email: "", text: "" });
+    }
+  };
+
+  return (
+    <section>
+      <div className="bg-black py-8">
+        <Header />
+      </div>
+      <div className="bg-white min-h-screen py-10 px-2 md:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+            {/* Left: Contact Info */}
+            <div>
+              <h1 className="text-3xl font-bold text-[#c0121a] mb-3">
+                Contact Us
+              </h1>
+              <p className="text-gray-700 mb-5 text-sm max-w-md">
+                Have questions or need support? Our team is here to help you
+                with orders, returns, product info, and more.
+              </p>
+              <div className="mb-3 flex items-start gap-2">
+                <span className="font-semibold">Address:</span>
+                <span className="text-gray-700 text-sm">
+                  4370 rue garand laval
+                  <br />
+                  Quebec Canada
+                </span>
+              </div>
+              <div className="mb-3 flex items-center gap-2">
+                <span className="font-semibold">Phone:</span>
+                <span className="text-gray-700 text-sm">514-354-7777</span>
+              </div>
+              <div className="mb-3 flex items-center gap-2">
+                <span className="font-semibold">Email:</span>
+                <span className="text-gray-700 text-sm">
+                  info@kmwholesale.ca
+                </span>
+              </div>
+              <div className="mt-6 mb-2 font-semibold">Follow Us</div>
+              <div className="flex gap-4 text-2xl">
+                <a href="#" className="text-[#1877f3] hover:opacity-80">
+                  <FaFacebook />
+                </a>
+                <a href="#" className="text-[#e4405f] hover:opacity-80">
+                  <FaInstagram />
+                </a>
+                <a href="#" className="text-[#1da1f2] hover:opacity-80">
+                  <FaTwitter />
+                </a>
+              </div>
+            </div>
+
+            {/* Right: Contact Form */}
+            <div>
+              <form
+                className="bg-white rounded-xl border p-6 flex flex-col gap-4 shadow-sm"
+                onSubmit={handleSubmit}
+                noValidate
+              >
+                <div className="flex flex-col md:flex-row gap-4">
+                  <div className="flex-1">
+                    <label className="block text-sm font-semibold mb-1">
+                      Full Name<span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      name="name"
+                      className={`w-full border rounded px-3 py-2 text-sm ${
+                        errors.name ? "border-red-500" : ""
+                      }`}
+                      placeholder="Enter your full name"
+                      value={form.name}
+                      onChange={handleChange}
+                      required
+                    />
+                    {errors.name && (
+                      <div className="text-xs text-red-500 mt-1">
+                        {errors.name}
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex-1">
+                    <label className="block text-sm font-semibold mb-1">
+                      WhatsApp Number(Optional)
+                    </label>
+                    <input
+                      type="text"
+                      name="whatsapp"
+                      className="w-full border rounded px-3 py-2 text-sm"
+                      placeholder="Enter your WhatsApp number"
+                      value={form.whatsapp}
+                      onChange={handleChange}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold mb-1">
+                    Your Email<span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    className={`w-full border rounded px-3 py-2 text-sm ${
+                      errors.email ? "border-red-500" : ""
+                    }`}
+                    placeholder="Enter your email address"
+                    value={form.email}
+                    onChange={handleChange}
+                    required
+                  />
+                  {errors.email && (
+                    <div className="text-xs text-red-500 mt-1">
+                      {errors.email}
+                    </div>
+                  )}
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold mb-1">
+                    Your text<span className="text-red-500">*</span>
+                  </label>
+                  <textarea
+                    name="text"
+                    className={`w-full border rounded px-3 py-2 text-sm min-h-[70px] ${
+                      errors.text ? "border-red-500" : ""
+                    }`}
+                    placeholder="Tell us about your idea..."
+                    value={form.text}
+                    onChange={handleChange}
+                    required
+                  />
+                  {errors.text && (
+                    <div className="text-xs text-red-500 mt-1">
+                      {errors.text}
+                    </div>
+                  )}
+                </div>
+                <button
+                  type="submit"
+                  className="bg-[#c0121a] text-white font-semibold px-6 py-2 rounded shadow hover:bg-[#a70c17] transition w-fit mt-2"
+                >
+                  Send message
+                </button>
+              </form>
+            </div>
+          </div>
+
+          {/* Map */}
+          <div className="w-full rounded-xl overflow-hidden border mt-8">
+            <iframe
+              title="map"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3762.003019023872!2d-99.1749720240846!3d19.44824604067559!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d1f8c7e2e2e2e3%3A0x7e7e7e7e7e7e7e7e!2sChapultepec%20Park!5e0!3m2!1sen!2smx!4v1670000000000!5m2!1sen!2smx"
+              width="100%"
+              height="350"
+              style={{ border: 0 }}
+              allowFullScreen=""
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            ></iframe>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export default Contact;

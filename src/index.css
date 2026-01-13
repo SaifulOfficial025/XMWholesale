@@ -1,0 +1,20 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&display=swap');
+
+:root {
+  --font-sans: 'Jost', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  --font-serif: 'Jost', Georgia, Cambria, 'Times New Roman', Times, serif;
+}
+
+html, body, #root {
+  font-family: var(--font-sans);
+}
+
+/* Use Playfair Display for headings */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-serif);
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
