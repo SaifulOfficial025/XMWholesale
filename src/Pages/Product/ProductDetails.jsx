@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Header from "../../Shared/Header";
 import Footer from "../../Shared/Footer";
 import { FaArrowRight } from "react-icons/fa6";
+import { Link } from "react-router-dom";
 
 const images = [
   "/categorydummyimg.png",
@@ -105,12 +106,14 @@ function ProductDetails() {
               <span className="ml-2 text-base font-medium">Boxes</span>
             </div>
             <div className="flex gap-3 mt-6">
-              <button className="bg-black text-white font-semibold px-7 py-3  shadow hover:bg-gray-800 transition">
-                ADD TO CART
-              </button>
-              <button className="bg-[#c0121a] text-white font-semibold px-7 py-3  shadow hover:bg-[#a70c17] transition">
+              <Link to="/checkout">
+                <button className="bg-black text-white font-semibold px-7 py-3  shadow hover:bg-gray-800 transition">
+                  ADD TO CART
+                </button>
+              </Link>
+              {/* <button className="bg-[#c0121a] text-white font-semibold px-7 py-3  shadow hover:bg-[#a70c17] transition">
                 BUY NOW
-              </button>
+              </button> */}
             </div>
           </div>
         </div>

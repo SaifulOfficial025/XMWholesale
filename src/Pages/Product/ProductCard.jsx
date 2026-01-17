@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 function ProductCard() {
   return (
@@ -23,9 +24,11 @@ function ProductCard() {
           <span className="font-semibold text-gray-400">Quantity:</span>
           <span className="ml-2 text-black font-semibold">24/120 ml</span>
         </div>
-        <button className="mt-auto bg-red-600 hover:bg-red-700 text-white font-semibold rounded border-2  py-2 text-base transition shadow-sm">
-          ADD TO CART
-        </button>
+        <Link to="/checkout" className="w-full">
+          <button className="w-full mt-auto bg-red-600 hover:bg-red-700 text-white font-semibold rounded border-2 py-2 text-base transition shadow-sm">
+            ADD TO CART
+          </button>
+        </Link>
       </div>
     </div>
   );

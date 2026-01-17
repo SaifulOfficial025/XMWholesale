@@ -1,6 +1,7 @@
 import React from "react";
 import { FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa";
 import Header from "../Shared/Header";
+import Footer from "../Shared/Footer";
 
 function Contact() {
   const [form, setForm] = React.useState({
@@ -194,6 +195,7 @@ function Contact() {
           </div>
         </div>
       </div>
+      <Footer />
     </section>
   );
 }

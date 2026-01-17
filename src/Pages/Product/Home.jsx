@@ -3,6 +3,7 @@ import Sidebar from "./Sidebar";
 import ProductCard from "./ProductCard";
 import Header from "../../Shared/Header";
 import Footer from "../../Shared/Footer";
+import { Link } from "react-router-dom";
 
 const products = Array(12).fill({
   title: "Monica Diara Party Dress",
@@ -56,14 +57,18 @@ function Home() {
             </div>
 
             {/* Product Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-7">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-7">
               {products.map((product, idx) => (
-                <ProductCard key={idx} />
+                <Link key={idx} to="/product/details">
+                  <div className="transition-transform duration-300 ease-in-out md:hover:scale-105 cursor-pointer h-full">
+                    <ProductCard product={product} />
+                  </div>
+                </Link>
               ))}
             </div>
 
             {/* Pagination */}
-            <div className="flex justify-end items-center gap-2 mt-10">
+            <div className="flex justify-center md:justify-end items-center gap-2 mt-10">
               <button className="px-3 py-2 rounded border border-gray-300 bg-red-100 text-gray-500 text-sm">
                 &lt; &lt;
               </button>
