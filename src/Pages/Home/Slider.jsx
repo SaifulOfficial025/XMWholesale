@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { IoChevronBackOutline, IoChevronForwardOutline } from "react-icons/io5";
 import { IoMdArrowRoundForward } from "react-icons/io";
 import slider1 from "../../../public/slider1.JPG";
@@ -21,6 +21,15 @@ function Slider() {
   function next() {
     setIndex((i) => (i + 1) % slides.length);
   }
+
+  // Auto-advance slides every 3 seconds
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setIndex((i) => (i + 1) % slides.length);
+    }, 3000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   return (
     <div className="max-w-7xl mx-auto px-4 mt-16">
