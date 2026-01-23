@@ -1,17 +1,58 @@
 import React, { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import OTPVerification from "./OTPVerification";
+import { registerUser } from "../../Redux/Auth/Signup";
 
 function Signup({ activeTab, setActiveTab, onClose }) {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [showOTP, setShowOTP] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [userEmail, setUserEmail] = useState("");
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    phone: "",
+    companyName: "",
+  });
 
-  // Dummy handler for demonstration
-  const handleSignUp = (e) => {
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  // Handler for sign up
+  const handleSignUp = async (e) => {
     e.preventDefault();
-    // Show OTP verification modal
-    setShowOTP(true);
+    setError("");
+
+    // Validate passwords match
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const response = await registerUser(formData);
+
+      // Save email to localStorage or state for OTP verification
+      setUserEmail(formData.email);
+
+      // Show OTP verification modal
+      setShowOTP(true);
+    } catch (err) {
+      setError(err.message || "Registration failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -25,6 +66,9 @@ function Signup({ activeTab, setActiveTab, onClose }) {
             </label>
             <input
               type="text"
+              name="firstName"
+              value={formData.firstName}
+              onChange={handleInputChange}
               className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#a41c1c] text-base bg-[#f7f7f7]"
               placeholder="Enter your first name"
               required
@@ -36,6 +80,9 @@ function Signup({ activeTab, setActiveTab, onClose }) {
             </label>
             <input
               type="text"
+              name="lastName"
+              value={formData.lastName}
+              onChange={handleInputChange}
               className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#a41c1c] text-base bg-[#f7f7f7]"
               placeholder="Enter your last name"
               required
@@ -47,6 +94,9 @@ function Signup({ activeTab, setActiveTab, onClose }) {
           <label className="block text-gray-700 text-base mb-1">Email</label>
           <input
             type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleInputChange}
             className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#a41c1c] text-base bg-[#f7f7f7]"
             placeholder="Enter your email"
             required
@@ -59,6 +109,9 @@ function Signup({ activeTab, setActiveTab, onClose }) {
           <div className="relative">
             <input
               type={showPassword ? "text" : "password"}
+              name="password"
+              value={formData.password}
+              onChange={handleInputChange}
               className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#a41c1c] text-base bg-[#f7f7f7] pr-10"
               placeholder="Enter your password"
               required
@@ -86,6 +139,9 @@ function Signup({ activeTab, setActiveTab, onClose }) {
           <div className="relative">
             <input
               type={showConfirmPassword ? "text" : "password"}
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleInputChange}
               className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#a41c1c] text-base bg-[#f7f7f7] pr-10"
               placeholder="Confirm your password"
               required
@@ -118,6 +174,9 @@ function Signup({ activeTab, setActiveTab, onClose }) {
             </span> */}
             <input
               type="tel"
+              name="phone"
+              value={formData.phone}
+              onChange={handleInputChange}
               className="flex-1 px-2 py-2 bg-transparent outline-none border-none text-base"
               placeholder="Enter your phone number"
               required
@@ -132,17 +191,27 @@ function Signup({ activeTab, setActiveTab, onClose }) {
           </label>
           <input
             type="text"
+            name="companyName"
+            value={formData.companyName}
+            onChange={handleInputChange}
             className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#a41c1c] text-base bg-[#f7f7f7]"
             placeholder="Enter your company name"
             required
           />
         </div>
+        {/* Error Message */}
+        {error && (
+          <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg text-sm">
+            {error}
+          </div>
+        )}
         {/* Sign up Button */}
         <button
           type="submit"
-          className="w-full bg-[#b80000] hover:bg-[#a41c1c] text-white text-lg font-semibold rounded-lg py-3 mb-3 transition-colors duration-200"
+          disabled={loading}
+          className="w-full bg-[#b80000] hover:bg-[#a41c1c] disabled:bg-gray-400 text-white text-lg font-semibold rounded-lg py-3 mb-3 transition-colors duration-200"
         >
-          Sign up
+          {loading ? "Signing up..." : "Sign up"}
         </button>
         {/* Already Have Account Link */}
         {/* <div className="text-center mt-4 text-gray-600 text-base">
@@ -170,7 +239,10 @@ function Signup({ activeTab, setActiveTab, onClose }) {
               &times;
             </button>
             <div className="bg-white rounded-2xl shadow-xl overflow-y-auto">
-              <OTPVerification onClose={() => setShowOTP(false)} />
+              <OTPVerification
+                email={userEmail}
+                onClose={() => setShowOTP(false)}
+              />
             </div>
           </div>
         </div>

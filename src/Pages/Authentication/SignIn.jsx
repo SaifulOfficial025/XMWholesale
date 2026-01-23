@@ -1,23 +1,66 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { FaGoogle } from "react-icons/fa";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import Signup from "./Signup";
 import ForgetPassword from "./ForgetPassword";
+import { loginUser } from "../../Redux/Auth/Signin";
 
 export default function SignIn({ onClose }) {
   const [activeTab, setActiveTab] = useState("login");
   const [showPassword, setShowPassword] = useState(false);
   const [showForgetPassword, setShowForgetPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+  const navigate = useNavigate();
 
-  // Dummy handlers for demonstration
-  const handleLogin = (e) => {
-    e.preventDefault();
-    // Implement login logic
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
-  const handleSignUp = (e) => {
+
+  // Login handler
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // Implement sign up logic
+    setError("");
+
+    try {
+      setLoading(true);
+      const response = await loginUser(formData.email, formData.password);
+
+      // Save all response data to localStorage
+      localStorage.setItem("access_token", response.access);
+      localStorage.setItem("refresh_token", response.refresh);
+      localStorage.setItem(
+        "user_info",
+        JSON.stringify(response.login_user_info),
+      );
+
+      // Close modal and navigate
+      if (onClose) {
+        onClose();
+      }
+
+      // Redirect to home
+      navigate("/");
+
+      // Refresh the page to update header with user info
+      setTimeout(() => {
+        window.location.reload();
+      }, 100);
+    } catch (err) {
+      setError(err.message || "Login failed. Please check your credentials.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -70,6 +113,9 @@ export default function SignIn({ onClose }) {
               </label>
               <input
                 type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
                 className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#a41c1c] text-base bg-[#f7f7f7]"
                 placeholder="Enter your email"
                 required
@@ -83,6 +129,9 @@ export default function SignIn({ onClose }) {
               <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
+                  name="password"
+                  value={formData.password}
+                  onChange={handleInputChange}
                   className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#a41c1c] text-base bg-[#f7f7f7] pr-10"
                   placeholder="Enter your password"
                   required
@@ -111,12 +160,19 @@ export default function SignIn({ onClose }) {
                 Forgot Password?
               </button>
             </div>
+            {/* Error Message */}
+            {error && (
+              <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg text-sm">
+                {error}
+              </div>
+            )}
             {/* Log in Button */}
             <button
               type="submit"
-              className="w-full bg-[#b80000] hover:bg-[#a41c1c] text-white text-lg font-semibold rounded-lg py-3 mb-3 transition-colors duration-200"
+              disabled={loading}
+              className="w-full bg-[#b80000] hover:bg-[#a41c1c] disabled:bg-gray-400 text-white text-lg font-semibold rounded-lg py-3 mb-3 transition-colors duration-200"
             >
-              Log in
+              {loading ? "Logging in..." : "Log in"}
             </button>
             {/* Or Continue With */}
             <div className="flex items-center my-3">

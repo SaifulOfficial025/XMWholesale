@@ -1,14 +1,15 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import "./index.css";
 
-import {
-  RouterProvider,
-} from "react-router-dom";
-import { router } from './Routes/router';
+import { RouterProvider } from "react-router-dom";
+import { router } from "./Routes/router";
+import { CartProvider } from "./Context/CartContext";
 
-createRoot(document.getElementById('root')).render(
+createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <CartProvider>
+      <RouterProvider router={router} />
+    </CartProvider>
   </StrictMode>,
-)
+);

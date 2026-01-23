@@ -1,20 +1,69 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Sidebar from "./Sidebar";
 import ProductCard from "./ProductCard";
 import Header from "../../Shared/Header";
 import Footer from "../../Shared/Footer";
-import { Link } from "react-router-dom";
-
-const products = Array(12).fill({
-  title: "Monica Diara Party Dress",
-  code: "Cf454t54",
-  quantity: "24/120 ml",
-  img: "/categorydummyimg.png",
-});
-
-const filters = ["All", "soap", "shampoo", "body lotion"];
+import { fetchAllProducts } from "../../Redux/Product/AllProducts";
 
 function Home() {
+  const [allProducts, setAllProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedBrand, setSelectedBrand] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 12;
+
+  useEffect(() => {
+    loadProducts();
+  }, []);
+
+  useEffect(() => {
+    filterAndSearchProducts();
+  }, [searchTerm, selectedBrand, allProducts]);
+
+  const loadProducts = async () => {
+    try {
+      setLoading(true);
+      const data = await fetchAllProducts();
+      setAllProducts(data.results || []);
+    } catch (err) {
+      setError(err.message || "Failed to load products");
+      console.error("Error loading products:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const filterAndSearchProducts = () => {
+    let filtered = allProducts;
+
+    // Filter by search term (search in name and code)
+    if (searchTerm) {
+      filtered = filtered.filter(
+        (product) =>
+          product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          product.code.toLowerCase().includes(searchTerm.toLowerCase()),
+      );
+    }
+
+    // Filter by brand
+    if (selectedBrand) {
+      filtered = filtered.filter((product) => product.brand === selectedBrand);
+    }
+
+    setFilteredProducts(filtered);
+    setCurrentPage(1);
+  };
+
+  // Pagination
+  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedProducts = filteredProducts.slice(
+    startIndex,
+    startIndex + itemsPerPage,
+  );
   return (
     <section>
       <div className="bg-black py-8">
@@ -25,7 +74,10 @@ function Home() {
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-8">
           {/* Sidebar */}
           <div className="md:w-1/5 w-full">
-            <Sidebar />
+            <Sidebar
+              selectedBrand={selectedBrand}
+              onBrandSelect={setSelectedBrand}
+            />
           </div>
           {/* Main Content */}
           <div className="flex-1">
@@ -34,60 +86,94 @@ function Home() {
               <input
                 type="text"
                 placeholder="Search Keywords..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
                 className="max-w-5xl w-full px-4 py-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#c0121a] bg-white text-gray-700"
               />
-              {/* <button className="text-sm font-semibold text-white px-2 py-1 bg-red-600  hover:bg-red-700">
-                SEARCH HERE
-              </button> */}
-            </div>
-            {/* Filter Bar */}
-            <div className="flex gap-2 flex-wrap mb-6">
-              {filters.map((filter, idx) => (
-                <button
-                  key={filter}
-                  className={`px-4 py-1 rounded-full border text-sm font-medium ${
-                    idx === 0
-                      ? "bg-[#c0121a] text-white border-[#c0121a]"
-                      : "bg-white text-gray-700 border-gray-300"
-                  }`}
-                >
-                  {filter}
-                </button>
-              ))}
             </div>
 
-            {/* Product Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-7">
-              {products.map((product, idx) => (
-                <Link key={idx} to="/product/details">
-                  <div className="transition-transform duration-300 ease-in-out md:hover:scale-105 cursor-pointer h-full">
-                    <ProductCard product={product} />
+            {loading ? (
+              <div className="text-center py-12">
+                <p className="text-gray-600">Loading products...</p>
+              </div>
+            ) : error ? (
+              <div className="text-center py-12">
+                <p className="text-red-600">{error}</p>
+              </div>
+            ) : filteredProducts.length === 0 ? (
+              <div className="text-center py-12">
+                <p className="text-gray-600">No products found</p>
+              </div>
+            ) : (
+              <>
+                {/* Results Counter */}
+                <div className="mb-4 text-sm text-gray-600">
+                  Showing {startIndex + 1} to{" "}
+                  {Math.min(startIndex + itemsPerPage, filteredProducts.length)}{" "}
+                  of {filteredProducts.length} products
+                </div>
+
+                {/* Product Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-7">
+                  {paginatedProducts.map((product) => (
+                    <ProductCard
+                      key={product.id}
+                      product={{
+                        id: product.id,
+                        title: product.name,
+                        code: product.code,
+                        quantity: product.quantity,
+                        img: product.primary_image,
+                        isFavorite: product.is_favorite,
+                        price: product.price,
+                      }}
+                      onProductClick={() =>
+                        (window.location.href = `/product/details/${product.id}`)
+                      }
+                    />
+                  ))}
+                </div>
+
+                {/* Pagination */}
+                {totalPages > 1 && (
+                  <div className="flex justify-center md:justify-end items-center gap-2 mt-10">
+                    <button
+                      onClick={() =>
+                        setCurrentPage(Math.max(1, currentPage - 1))
+                      }
+                      disabled={currentPage === 1}
+                      className="px-3 py-2 rounded border border-gray-300 bg-red-100 text-gray-500 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      &lt; &lt;
+                    </button>
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                      (num) => (
+                        <button
+                          key={num}
+                          onClick={() => setCurrentPage(num)}
+                          className={`px-3 py-2 rounded border text-sm font-semibold ${
+                            num === currentPage
+                              ? "bg-[#c0121a] text-white border-[#c0121a]"
+                              : "bg-red-100 text-gray-700 border-gray-300"
+                          }`}
+                        >
+                          {String(num).padStart(2, "0")}
+                        </button>
+                      ),
+                    )}
+                    <button
+                      onClick={() =>
+                        setCurrentPage(Math.min(totalPages, currentPage + 1))
+                      }
+                      disabled={currentPage === totalPages}
+                      className="px-3 py-2 rounded border border-gray-300 bg-red-100 text-gray-500 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      &gt; &gt;
+                    </button>
                   </div>
-                </Link>
-              ))}
-            </div>
-
-            {/* Pagination */}
-            <div className="flex justify-center md:justify-end items-center gap-2 mt-10">
-              <button className="px-3 py-2 rounded border border-gray-300 bg-red-100 text-gray-500 text-sm">
-                &lt; &lt;
-              </button>
-              {[1, 2, 3, 4].map((num, idx) => (
-                <button
-                  key={num}
-                  className={`px-3 py-2 rounded border text-sm font-semibold ${
-                    num === 1
-                      ? "bg-[#c0121a] text-white border-[#c0121a]"
-                      : "bg-red-100 text-gray-700 border-gray-300"
-                  }`}
-                >
-                  {`0${num}`}
-                </button>
-              ))}
-              <button className="px-3 py-2 rounded border border-gray-300 bg-red-100 text-gray-500 text-sm">
-                &gt; &gt;
-              </button>
-            </div>
+                )}
+              </>
+            )}
           </div>
         </div>
       </div>

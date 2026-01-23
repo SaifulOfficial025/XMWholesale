@@ -1,15 +1,48 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { FaPhoneAlt } from "react-icons/fa";
 import { IoCartOutline } from "react-icons/io5";
-import { NavLink, Link } from "react-router-dom";
+import { NavLink, Link, useNavigate } from "react-router-dom";
 import { LuPhone } from "react-icons/lu";
-
-import { useState } from "react";
+import { FaChevronDown } from "react-icons/fa";
 import SignIn from "../Pages/Authentication/SignIn";
+import Profile from "../Pages/Authentication/Profile";
 
 function Header() {
   const [showSignIn, setShowSignIn] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userName, setUserName] = useState("");
+  const navigate = useNavigate();
+
+  // Check if user is logged in on component mount
+  useEffect(() => {
+    const accessToken = localStorage.getItem("access_token");
+    if (accessToken && accessToken !== "undefined") {
+      setIsLoggedIn(true);
+      const userInfo = localStorage.getItem("user_info");
+      if (userInfo && userInfo !== "undefined") {
+        try {
+          const user = JSON.parse(userInfo);
+          setUserName(user.name || "User");
+        } catch (err) {
+          console.error("Failed to parse user_info:", err);
+          setUserName("User");
+        }
+      }
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+    localStorage.removeItem("user_info");
+    setIsLoggedIn(false);
+    setUserName("");
+    setShowDropdown(false);
+    navigate("/");
+  };
 
   return (
     <>
@@ -76,12 +109,44 @@ function Header() {
               </button>
             </Link>
 
-            <button
-              className="ml-2 inline-block bg-red-600 text-white px-3 py-1 text-sm font-semibold hover:bg-red-700"
-              onClick={() => setShowSignIn(true)}
-            >
-              SIGN IN
-            </button>
+            {isLoggedIn ? (
+              <div className="relative">
+                <button
+                  className="ml-2 inline-flex items-center gap-2 bg-red-600 text-white px-3 py-1 text-sm font-semibold hover:bg-red-700 rounded"
+                  onClick={() => setShowDropdown(!showDropdown)}
+                >
+                  {userName}
+                  <FaChevronDown size={12} />
+                </button>
+
+                {showDropdown && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white text-black rounded-lg shadow-xl z-50">
+                    <button
+                      onClick={() => {
+                        setShowProfile(true);
+                        setShowDropdown(false);
+                      }}
+                      className="w-full text-left px-4 py-2 hover:bg-gray-100 font-semibold border-b border-gray-200"
+                    >
+                      Profile
+                    </button>
+                    <button
+                      onClick={handleLogout}
+                      className="w-full text-left px-4 py-2 hover:bg-gray-100 font-semibold text-red-600"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <button
+                className="ml-2 inline-block bg-red-600 text-white px-3 py-1 text-sm font-semibold hover:bg-red-700"
+                onClick={() => setShowSignIn(true)}
+              >
+                SIGN IN
+              </button>
+            )}
           </div>
         </div>
       </header>
@@ -171,6 +236,25 @@ function Header() {
           <div className="relative w-full max-w-2xl mx-auto">
             <div className="rounded-2xl shadow-xl overflow-y-auto">
               <SignIn onClose={() => setShowSignIn(false)} />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal for Profile */}
+      {showProfile && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+          <div className="relative w-full max-w-md mx-auto">
+            <button
+              className="absolute top-2 right-2 text-gray-500 hover:text-red-600 text-2xl font-bold z-10"
+              onClick={() => setShowProfile(false)}
+              aria-label="Close"
+              type="button"
+            >
+              &times;
+            </button>
+            <div className="bg-white rounded-2xl shadow-xl overflow-y-auto">
+              <Profile onClose={() => setShowProfile(false)} />
             </div>
           </div>
         </div>

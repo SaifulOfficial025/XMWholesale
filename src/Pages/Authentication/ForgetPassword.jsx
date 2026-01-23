@@ -1,5 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import {
+  sendForgetPasswordOTP,
+  verifyForgetPasswordOTP,
+  changePassword,
+  resendOTP,
+} from "../../Redux/Auth/ForgetPassword";
 
 function ForgetPassword({ onClose }) {
   const [step, setStep] = useState(1);
@@ -9,32 +16,121 @@ function ForgetPassword({ onClose }) {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
+  const [timer, setTimer] = useState(0);
+  const navigate = useNavigate();
 
-  const handleSendOTP = (e) => {
+  // Timer for resend OTP
+  useEffect(() => {
+    if (timer > 0) {
+      const interval = setInterval(() => setTimer((t) => t - 1), 1000);
+      return () => clearInterval(interval);
+    }
+  }, [timer]);
+
+  const handleSendOTP = async (e) => {
     e.preventDefault();
-    if (email) {
+    setError("");
+
+    if (!email) {
+      setError("Please enter your email");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      await sendForgetPasswordOTP(email);
       setStep(2);
+      setTimer(21); // Start 21-second timer
+      setSuccess(false);
+    } catch (err) {
+      setError(err.message || "Failed to send OTP");
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleVerifyOTP = (e) => {
+  const handleVerifyOTP = async (e) => {
     e.preventDefault();
-    if (otp) {
+    setError("");
+
+    if (!otp) {
+      setError("Please enter OTP");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const response = await verifyForgetPasswordOTP(email, otp);
+
+      // Save tokens to localStorage
+      localStorage.setItem("access_token", response.access);
+      localStorage.setItem("refresh_token", response.refresh);
+      localStorage.setItem(
+        "user_info",
+        JSON.stringify(response.login_user_info),
+      );
+
       setStep(3);
+      setSuccess(false);
+    } catch (err) {
+      setError(err.message || "OTP verification failed");
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleSavePassword = (e) => {
+  const handleSavePassword = async (e) => {
     e.preventDefault();
-    if (password && confirmPassword && password === confirmPassword) {
-      // Reset and close
-      setStep(1);
-      setEmail("");
-      setOtp("");
-      setPassword("");
-      setConfirmPassword("");
-      onClose && onClose();
-      window.location.reload();
+    setError("");
+    setSuccess(false);
+
+    if (!password || !confirmPassword) {
+      setError("Please enter both password fields");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      await changePassword(password);
+      setSuccess(true);
+
+      // Show success and redirect after 2 seconds
+      setTimeout(() => {
+        setStep(1);
+        setEmail("");
+        setOtp("");
+        setPassword("");
+        setConfirmPassword("");
+        onClose && onClose();
+        navigate("/");
+      }, 2000);
+    } catch (err) {
+      setError(err.message || "Failed to change password");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResendOTP = async () => {
+    setError("");
+    try {
+      setLoading(true);
+      await resendOTP(email);
+      setTimer(21); // Restart timer
+      setSuccess(true);
+      setTimeout(() => setSuccess(false), 3000);
+    } catch (err) {
+      setError(err.message || "Failed to resend OTP");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -81,13 +177,21 @@ function ForgetPassword({ onClose }) {
               />
             </div>
             {step === 1 && (
-              <button
-                type="button"
-                onClick={handleSendOTP}
-                className="w-full bg-[#b80000] hover:bg-[#a41c1c] text-white text-lg font-semibold rounded-lg py-3 mb-3 transition-colors duration-200"
-              >
-                Send OTP
-              </button>
+              <>
+                {error && (
+                  <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg text-sm">
+                    {error}
+                  </div>
+                )}
+                <button
+                  type="button"
+                  onClick={handleSendOTP}
+                  disabled={loading}
+                  className="w-full bg-[#b80000] hover:bg-[#a41c1c] disabled:bg-gray-400 text-white text-lg font-semibold rounded-lg py-3 mb-3 transition-colors duration-200"
+                >
+                  {loading ? "Sending..." : "Send OTP"}
+                </button>
+              </>
             )}
           </div>
 
@@ -114,13 +218,40 @@ function ForgetPassword({ onClose }) {
                   />
                 </div>
                 {step === 2 && (
-                  <button
-                    type="button"
-                    onClick={handleVerifyOTP}
-                    className="w-full bg-[#b80000] hover:bg-[#a41c1c] text-white text-lg font-semibold rounded-lg py-3 mb-3 transition-colors duration-200"
-                  >
-                    Verify
-                  </button>
+                  <>
+                    {error && (
+                      <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg text-sm">
+                        {error}
+                      </div>
+                    )}
+                    {success && (
+                      <div className="mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded-lg text-sm animate-pulse">
+                        ✓ OTP verified successfully!
+                      </div>
+                    )}
+                    <button
+                      type="button"
+                      onClick={handleVerifyOTP}
+                      disabled={loading}
+                      className="w-full bg-[#b80000] hover:bg-[#a41c1c] disabled:bg-gray-400 text-white text-lg font-semibold rounded-lg py-3 mb-3 transition-colors duration-200"
+                    >
+                      {loading ? "Verifying..." : "Verify"}
+                    </button>
+
+                    <div className="text-center mt-3 text-sm">
+                      <span className="text-gray-700">
+                        Didn't receive OTP?{" "}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={handleResendOTP}
+                        disabled={timer > 0 || loading}
+                        className="text-[#b80000] font-semibold hover:underline disabled:text-gray-400 disabled:cursor-not-allowed"
+                      >
+                        {timer > 0 ? `Resend (${timer}s)` : "Resend OTP"}
+                      </button>
+                    </div>
+                  </>
                 )}
               </>
             )}
@@ -195,10 +326,23 @@ function ForgetPassword({ onClose }) {
                 <button
                   type="button"
                   onClick={handleSavePassword}
-                  className="w-full bg-[#b80000] hover:bg-[#a41c1c] text-white text-lg font-semibold rounded-lg py-3 mb-3 transition-colors duration-200"
+                  disabled={loading}
+                  className="w-full bg-[#b80000] hover:bg-[#a41c1c] disabled:bg-gray-400 text-white text-lg font-semibold rounded-lg py-3 mb-3 transition-colors duration-200"
                 >
-                  Save Password
+                  {loading ? "Saving..." : "Save Password"}
                 </button>
+
+                {error && (
+                  <div className="p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg text-sm">
+                    {error}
+                  </div>
+                )}
+
+                {success && (
+                  <div className="p-3 bg-green-100 border border-green-400 text-green-700 rounded-lg text-sm animate-pulse">
+                    ✓ Password changed successfully! Redirecting...
+                  </div>
+                )}
               </>
             )}
           </div>

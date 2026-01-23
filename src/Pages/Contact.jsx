@@ -2,6 +2,7 @@ import React from "react";
 import { FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa";
 import Header from "../Shared/Header";
 import Footer from "../Shared/Footer";
+import { submitContactForm } from "../Redux/Contact";
 
 function Contact() {
   const [form, setForm] = React.useState({
@@ -11,6 +12,8 @@ function Contact() {
     text: "",
   });
   const [errors, setErrors] = React.useState({});
+  const [loading, setLoading] = React.useState(false);
+  const [successMessage, setSuccessMessage] = React.useState("");
 
   const validate = () => {
     const newErrors = {};
@@ -26,14 +29,39 @@ function Contact() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validate();
     setErrors(validationErrors);
+
     if (Object.keys(validationErrors).length === 0) {
-      // Submit form logic here
-      alert("Message sent!");
-      setForm({ name: "", whatsapp: "", email: "", text: "" });
+      try {
+        setLoading(true);
+        console.log("Submitting contact form:", form);
+
+        const response = await submitContactForm(form);
+        console.log("Contact form submitted successfully:", response);
+
+        // Show success message
+        setSuccessMessage(
+          "Thank you! Your message has been sent successfully.",
+        );
+
+        // Clear form
+        setForm({ name: "", whatsapp: "", email: "", text: "" });
+
+        // Clear success message after 5 seconds
+        setTimeout(() => {
+          setSuccessMessage("");
+        }, 5000);
+      } catch (error) {
+        console.error("Error submitting contact form:", error);
+        setErrors({
+          submit: error.message || "Failed to send message. Please try again.",
+        });
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -88,6 +116,16 @@ function Contact() {
 
             {/* Right: Contact Form */}
             <div>
+              {successMessage && (
+                <div className="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg animate-pulse">
+                  ✓ {successMessage}
+                </div>
+              )}
+              {errors.submit && (
+                <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+                  ✗ {errors.submit}
+                </div>
+              )}
               <form
                 className="bg-white rounded-xl border p-6 flex flex-col gap-4 shadow-sm"
                 onSubmit={handleSubmit}
@@ -172,9 +210,10 @@ function Contact() {
                 </div>
                 <button
                   type="submit"
-                  className="bg-[#c0121a] text-white font-semibold px-6 py-2 rounded shadow hover:bg-[#a70c17] transition w-fit mt-2"
+                  disabled={loading}
+                  className="bg-[#c0121a] text-white font-semibold px-6 py-2 rounded shadow hover:bg-[#a70c17] transition w-fit mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Send message
+                  {loading ? "Sending..." : "Send message"}
                 </button>
               </form>
             </div>

@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Thankyousignup from "./Thankyousignup";
+import { verifyOTP } from "../../Redux/Auth/Signup";
 
-function OTPVerification({ onClose }) {
+function OTPVerification({ email, onClose }) {
   const [otp, setOtp] = useState("");
   const [timer, setTimer] = useState(21);
   const [showThankYou, setShowThankYou] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (timer > 0) {
@@ -13,10 +18,42 @@ function OTPVerification({ onClose }) {
     }
   }, [timer]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Show thank you page after OTP verification
-    setShowThankYou(true);
+    setError("");
+
+    if (!otp || otp.length < 4) {
+      setError("Please enter a valid OTP");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const response = await verifyOTP(email, otp);
+
+      // Save tokens and user info to localStorage
+      if (response.access) {
+        localStorage.setItem("access_token", response.access);
+        localStorage.setItem("refresh_token", response.refresh);
+        localStorage.setItem(
+          "user_info",
+          JSON.stringify(response.login_user_info),
+        );
+
+        // Show thank you page
+        setShowThankYou(true);
+
+        // Navigate to home after a delay
+        setTimeout(() => {
+          navigate("/");
+          onClose && onClose();
+        }, 2000);
+      }
+    } catch (err) {
+      setError(err.message || "OTP verification failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -51,16 +88,23 @@ function OTPVerification({ onClose }) {
             maxLength={6}
             style={{ letterSpacing: "0.2em" }}
             required
+            placeholder="000000"
           />
+          {error && (
+            <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg text-sm">
+              {error}
+            </div>
+          )}
           <button
             type="submit"
-            className="w-full bg-[#b80000] hover:bg-[#a41c1c] text-white text-lg font-semibold rounded-lg py-3 mb-3 transition-colors duration-200"
+            disabled={loading}
+            className="w-full bg-[#b80000] hover:bg-[#a41c1c] disabled:bg-gray-400 text-white text-lg font-semibold rounded-lg py-3 mb-3 transition-colors duration-200"
           >
-            Verify
+            {loading ? "Verifying..." : "Verify"}
           </button>
         </form>
         <div className="text-center mt-2 text-base">
-          <span className="text-gray-700">NOt recive OTP? </span>
+          <span className="text-gray-700">Not received OTP? </span>
           <span className="text-gray-700">Resend OTP </span>
           <span className="text-[#b80000] font-semibold">
             {timer > 0 ? `00:${timer.toString().padStart(2, "0")}` : "00:00"}
