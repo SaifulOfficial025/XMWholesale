@@ -53,7 +53,7 @@ export const verifyForgetPasswordOTP = async (email, otp) => {
 export const changePassword = async (newPassword) => {
   try {
     const accessToken = localStorage.getItem("access_token");
-    const response = await fetch(`${BASE_URL}/accounts/api/change-password/`, {
+    const response = await fetch(`${BASE_URL}/accounts/api/change-password`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

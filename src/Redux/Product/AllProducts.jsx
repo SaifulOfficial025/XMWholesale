@@ -21,10 +21,25 @@ export const fetchBrands = async () => {
   }
 };
 
-// Fetch all products
-export const fetchAllProducts = async () => {
+// Fetch all products with optional filters
+export const fetchAllProducts = async (params = {}) => {
   try {
-    const response = await fetch(`${BASE_URL}/products/api/products/`, {
+    // Build query string from params
+    const queryParams = new URLSearchParams();
+
+    if (params.brand) queryParams.append("brand", params.brand);
+    if (params.category) queryParams.append("category", params.category);
+    if (params.search) queryParams.append("search", params.search);
+    if (params.ordering) queryParams.append("ordering", params.ordering);
+    if (params.page) queryParams.append("page", params.page);
+    if (params.page_size) queryParams.append("page_size", params.page_size);
+
+    const queryString = queryParams.toString();
+    const url = `${BASE_URL}/products/api/products/${queryString ? `?${queryString}` : ""}`;
+
+    console.log("Fetching products with URL:", url);
+
+    const response = await fetch(url, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

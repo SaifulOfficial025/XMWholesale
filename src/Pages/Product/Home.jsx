@@ -7,27 +7,36 @@ import { fetchAllProducts } from "../../Redux/Product/AllProducts";
 
 function Home() {
   const [allProducts, setAllProducts] = useState([]);
-  const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedBrand, setSelectedBrand] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
   const itemsPerPage = 12;
 
+  // Load products when any filter changes
   useEffect(() => {
     loadProducts();
-  }, []);
-
-  useEffect(() => {
-    filterAndSearchProducts();
-  }, [searchTerm, selectedBrand, allProducts]);
+  }, [searchTerm, selectedBrand, currentPage]);
 
   const loadProducts = async () => {
     try {
       setLoading(true);
-      const data = await fetchAllProducts();
+      setError("");
+
+      // Build params for API
+      const params = {
+        page: currentPage,
+        page_size: itemsPerPage,
+      };
+
+      if (searchTerm) params.search = searchTerm;
+      if (selectedBrand) params.brand = selectedBrand;
+
+      const data = await fetchAllProducts(params);
       setAllProducts(data.results || []);
+      setTotalCount(data.count || 0);
     } catch (err) {
       setError(err.message || "Failed to load products");
       console.error("Error loading products:", err);
@@ -36,34 +45,21 @@ function Home() {
     }
   };
 
-  const filterAndSearchProducts = () => {
-    let filtered = allProducts;
+  // Handle search input change
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+    setCurrentPage(1); // Reset to page 1 when search changes
+  };
 
-    // Filter by search term (search in name and code)
-    if (searchTerm) {
-      filtered = filtered.filter(
-        (product) =>
-          product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          product.code.toLowerCase().includes(searchTerm.toLowerCase()),
-      );
-    }
-
-    // Filter by brand
-    if (selectedBrand) {
-      filtered = filtered.filter((product) => product.brand === selectedBrand);
-    }
-
-    setFilteredProducts(filtered);
-    setCurrentPage(1);
+  // Handle brand selection change
+  const handleBrandSelect = (brand) => {
+    setSelectedBrand(brand);
+    setCurrentPage(1); // Reset to page 1 when brand changes
   };
 
   // Pagination
-  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+  const totalPages = Math.ceil(totalCount / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginatedProducts = filteredProducts.slice(
-    startIndex,
-    startIndex + itemsPerPage,
-  );
   return (
     <section>
       <div className="bg-black py-8">
@@ -76,7 +72,7 @@ function Home() {
           <div className="md:w-1/5 w-full">
             <Sidebar
               selectedBrand={selectedBrand}
-              onBrandSelect={setSelectedBrand}
+              onBrandSelect={handleBrandSelect}
             />
           </div>
           {/* Main Content */}
@@ -87,7 +83,7 @@ function Home() {
                 type="text"
                 placeholder="Search Keywords..."
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={handleSearchChange}
                 className="max-w-5xl w-full px-4 py-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#c0121a] bg-white text-gray-700"
               />
             </div>
@@ -100,7 +96,7 @@ function Home() {
               <div className="text-center py-12">
                 <p className="text-red-600">{error}</p>
               </div>
-            ) : filteredProducts.length === 0 ? (
+            ) : allProducts.length === 0 ? (
               <div className="text-center py-12">
                 <p className="text-gray-600">No products found</p>
               </div>
@@ -109,13 +105,13 @@ function Home() {
                 {/* Results Counter */}
                 <div className="mb-4 text-sm text-gray-600">
                   Showing {startIndex + 1} to{" "}
-                  {Math.min(startIndex + itemsPerPage, filteredProducts.length)}{" "}
-                  of {filteredProducts.length} products
+                  {Math.min(startIndex + itemsPerPage, totalCount)} of{" "}
+                  {totalCount} products
                 </div>
 
                 {/* Product Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-7">
-                  {paginatedProducts.map((product) => (
+                  {allProducts.map((product) => (
                     <ProductCard
                       key={product.id}
                       product={{

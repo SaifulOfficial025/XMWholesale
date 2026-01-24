@@ -38,9 +38,9 @@ function Sidebar({ selectedBrand, onBrandSelect }) {
           {brands.map((brand) => (
             <li key={brand.id}>
               <button
-                onClick={() => onBrandSelect(brand.id)}
+                onClick={() => onBrandSelect(brand.name)}
                 className={`w-full rounded-full border-2 font-medium py-2 px-6 text-base transition-colors duration-200 ${
-                  selectedBrand === brand.id
+                  selectedBrand === brand.name
                     ? "border-[#c0121a] text-[#c0121a] bg-white"
                     : "text-gray-700 bg-transparent border-gray-300 hover:border-gray-400"
                 }`}
