@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { fetchUserProfile, updateUserProfile } from "../../Redux/Auth/Profile";
+import { FaCamera } from "react-icons/fa";
 
 function Profile({ onClose }) {
   const [profileData, setProfileData] = useState({
@@ -82,9 +83,41 @@ function Profile({ onClose }) {
         company_name: profileData.company_name,
         image: profileData.image,
       };
-      await updateUserProfile(updateData);
-      setSuccess(true);
-      setTimeout(() => setSuccess(false), 3000);
+      const updated = await updateUserProfile(updateData);
+
+      // If API returned updated user data or image URL, refresh local state
+      if (updated) {
+        setProfileData((prev) => ({
+          ...prev,
+          first_name: updated.first_name || prev.first_name,
+          last_name: updated.last_name || prev.last_name,
+          phone_number: updated.phone_number || prev.phone_number,
+          company_name: updated.company_name || prev.company_name,
+        }));
+
+        if (updated.image) {
+          setImagePreview(updated.image);
+        }
+
+        // Update stored user info and notify header
+        try {
+          const existing = localStorage.getItem("user_info");
+          let stored = existing ? JSON.parse(existing) : {};
+          stored = {
+            ...stored,
+            first_name: updated.first_name || stored.first_name,
+            last_name: updated.last_name || stored.last_name,
+            image: updated.image || stored.image,
+          };
+          localStorage.setItem("user_info", JSON.stringify(stored));
+          window.dispatchEvent(new Event("authChanged"));
+        } catch (e) {
+          console.warn("Failed to update local user_info:", e);
+        }
+
+        setSuccess(true);
+        setTimeout(() => setSuccess(false), 3000);
+      }
     } catch (err) {
       setError(err.message || "Failed to update profile");
     } finally {
@@ -110,32 +143,39 @@ function Profile({ onClose }) {
       >
         {/* Logo / Profile Image */}
         <div className="flex justify-center mb-6">
-          <div className="relative w-24 h-24 rounded-full bg-black flex items-center justify-center overflow-hidden">
+          <div className="relative w-32 h-32 rounded-full bg-black flex items-center justify-center overflow-hidden group">
             {imagePreview ? (
               <img
                 src={imagePreview}
                 alt="Profile"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover group-hover:opacity-60 transition-opacity duration-200"
               />
             ) : (
               <img
                 src="/xmlogo.png"
                 alt="XM Wholesale"
-                className="w-20 h-20 object-contain"
+                className="w-24 h-24 object-contain group-hover:opacity-60 transition-opacity duration-200"
               />
             )}
-          </div>
-          {/* <label className="absolute bottom-0 right-0 mt-2 cursor-pointer">
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              className="hidden"
-            />
-            <div className="bg-red-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold hover:bg-red-700">
-              +
+
+            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black/40 rounded-full">
+              <label
+                className="cursor-pointer"
+                aria-label="Change profile picture"
+              >
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="hidden"
+                />
+                <div className="flex flex-col items-center">
+                  <FaCamera className="text-white text-3xl mb-1" />
+                  <span className="text-white text-xs font-semibold">Edit</span>
+                </div>
+              </label>
             </div>
-          </label> */}
+          </div>
         </div>
         <form onSubmit={handleUpdate}>
           {/* First Name & Last Name */}

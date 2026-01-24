@@ -19,6 +19,24 @@ export const loginUser = async (email, password) => {
     }
 
     const data = await response.json();
+
+    try {
+      if (data.tokens) {
+        localStorage.setItem("tokens", JSON.stringify(data.tokens));
+        if (data.tokens.access) {
+          localStorage.setItem("accessToken", data.tokens.access);
+        }
+        if (data.tokens.refresh) {
+          localStorage.setItem("refreshToken", data.tokens.refresh);
+        }
+      }
+      if (data.user) {
+        localStorage.setItem("user", JSON.stringify(data.user));
+      }
+    } catch (storageErr) {
+      console.warn("Failed to save login data to localStorage:", storageErr);
+    }
+
     return data;
   } catch (error) {
     throw error;

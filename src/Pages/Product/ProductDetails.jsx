@@ -65,8 +65,11 @@ function ProductDetails() {
     );
   }
 
-  // Create images array with primary_image
-  const images = [product.primary_image];
+  // Create images array: primary_image first, then additional images
+  const images = [
+    product.primary_image,
+    ...(product.images && Array.isArray(product.images) ? product.images : []),
+  ];
 
   return (
     <section>

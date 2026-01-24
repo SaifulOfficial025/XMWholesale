@@ -18,29 +18,71 @@ function Header() {
 
   // Check if user is logged in on component mount
   useEffect(() => {
-    const accessToken = localStorage.getItem("access_token");
-    if (accessToken && accessToken !== "undefined") {
-      setIsLoggedIn(true);
-      const userInfo = localStorage.getItem("user_info");
-      if (userInfo && userInfo !== "undefined") {
-        try {
-          const user = JSON.parse(userInfo);
-          setUserName(user.name || "User");
-        } catch (err) {
-          console.error("Failed to parse user_info:", err);
-          setUserName("User");
+    const readAuth = () => {
+      const accessToken =
+        localStorage.getItem("access_token") ||
+        localStorage.getItem("accessToken") ||
+        localStorage.getItem("access");
+      if (accessToken && accessToken !== "undefined") {
+        setIsLoggedIn(true);
+        const userInfoRaw =
+          localStorage.getItem("user_info") ||
+          localStorage.getItem("user") ||
+          localStorage.getItem("user_info") ||
+          localStorage.getItem("login_user_info");
+        if (userInfoRaw && userInfoRaw !== "undefined") {
+          try {
+            const user = JSON.parse(userInfoRaw);
+            // Try different name fields
+            setUserName(
+              user.full_name ||
+                user.name ||
+                user.fullName ||
+                user.email ||
+                "User",
+            );
+          } catch (err) {
+            console.error("Failed to parse user_info:", err);
+            setUserName("User");
+          }
         }
+      } else {
+        setIsLoggedIn(false);
+        setUserName("");
       }
-    }
+    };
+
+    readAuth();
+
+    const handleAuthChange = () => readAuth();
+    window.addEventListener("storage", handleAuthChange);
+    window.addEventListener("authChanged", handleAuthChange);
+
+    return () => {
+      window.removeEventListener("storage", handleAuthChange);
+      window.removeEventListener("authChanged", handleAuthChange);
+    };
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("refresh_token");
-    localStorage.removeItem("user_info");
+    // Remove both legacy and newer key variants
+    [
+      "access_token",
+      "refresh_token",
+      "user_info",
+      "accessToken",
+      "refreshToken",
+      "user",
+      "tokens",
+      "login_user_info",
+    ].forEach((k) => localStorage.removeItem(k));
     setIsLoggedIn(false);
     setUserName("");
     setShowDropdown(false);
+    // notify others
+    try {
+      window.dispatchEvent(new Event("authChanged"));
+    } catch (e) {}
     navigate("/");
   };
 

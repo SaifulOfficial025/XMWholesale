@@ -34,7 +34,7 @@ function ProductCard({ product, onProductClick }) {
   };
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden max-w-xs mx-auto flex flex-col">
+    <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden w-full h-[460px] flex flex-col">
       <div
         className="aspect-[4/3] w-full bg-gray-100 cursor-pointer"
         onClick={handleImageClick}
@@ -47,18 +47,18 @@ function ProductCard({ product, onProductClick }) {
         />
       </div>
       <div className="p-5 flex flex-col flex-1">
-        <h3 className="font-bold text-lg mb-2 text-gray-900">
+        <h3 className="font-bold text-lg mb-2 text-gray-900 truncate">
           {product.title || "Product Name"}
         </h3>
         <div className="mb-1 text-base">
           <span className="font-semibold text-gray-400">Code:</span>
-          <span className="ml-2 text-black font-semibold">
+          <span className="ml-2 text-black font-semibold inline-block max-w-[12rem] align-middle truncate">
             {product.code || "N/A"}
           </span>
         </div>
         <div className="mb-4 text-base">
           <span className="font-semibold text-gray-400">Quantity:</span>
-          <span className="ml-2 text-black font-semibold">
+          <span className="ml-2 text-black font-semibold inline-block max-w-[8rem] align-middle truncate">
             {product.quantity || "N/A"}
           </span>
         </div>

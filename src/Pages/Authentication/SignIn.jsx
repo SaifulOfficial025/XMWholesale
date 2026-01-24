@@ -36,13 +36,21 @@ export default function SignIn({ onClose }) {
       setLoading(true);
       const response = await loginUser(formData.email, formData.password);
 
-      // Save all response data to localStorage
-      localStorage.setItem("access_token", response.access);
-      localStorage.setItem("refresh_token", response.refresh);
-      localStorage.setItem(
-        "user_info",
-        JSON.stringify(response.login_user_info),
-      );
+      // Save response tokens and user info to localStorage (use API shape)
+      if (response.tokens) {
+        localStorage.setItem("access_token", response.tokens.access);
+        localStorage.setItem("refresh_token", response.tokens.refresh);
+      }
+      if (response.user) {
+        localStorage.setItem("user_info", JSON.stringify(response.user));
+      }
+
+      // Notify other parts of the app that auth state changed
+      try {
+        window.dispatchEvent(new Event("authChanged"));
+      } catch (e) {
+        // ignore
+      }
 
       // Close modal and navigate
       if (onClose) {
@@ -52,10 +60,7 @@ export default function SignIn({ onClose }) {
       // Redirect to home
       navigate("/");
 
-      // Refresh the page to update header with user info
-      setTimeout(() => {
-        window.location.reload();
-      }, 100);
+      // Close modal and let Header update via event/listener
     } catch (err) {
       setError(err.message || "Login failed. Please check your credentials.");
     } finally {
