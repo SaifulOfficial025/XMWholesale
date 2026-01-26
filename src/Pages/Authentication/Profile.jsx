@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { fetchUserProfile, updateUserProfile } from "../../Redux/Auth/Profile";
 import { FaCamera } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
 
 function Profile({ onClose }) {
+  const { t } = useTranslation();
   const [profileData, setProfileData] = useState({
     first_name: "",
     last_name: "",
@@ -39,7 +41,7 @@ function Profile({ onClose }) {
         setImagePreview(data.image);
       }
     } catch (err) {
-      setError(err.message || "Failed to load profile");
+      setError(err.message || t("auth.failed_load_profile"));
     } finally {
       setLoading(false);
     }
@@ -119,7 +121,7 @@ function Profile({ onClose }) {
         setTimeout(() => setSuccess(false), 3000);
       }
     } catch (err) {
-      setError(err.message || "Failed to update profile");
+      setError(err.message || t("auth.failed_update_profile"));
     } finally {
       setUpdating(false);
     }
@@ -129,7 +131,9 @@ function Profile({ onClose }) {
     return (
       <div className="flex items-center justify-center">
         <div className="rounded-2xl shadow-xl p-8 w-full max-w-md">
-          <p className="text-center text-gray-600">Loading profile...</p>
+          <p className="text-center text-gray-600">
+            {t("auth.loading_profile")}
+          </p>
         </div>
       </div>
     );
@@ -171,7 +175,9 @@ function Profile({ onClose }) {
                 />
                 <div className="flex flex-col items-center">
                   <FaCamera className="text-white text-3xl mb-1" />
-                  <span className="text-white text-xs font-semibold">Edit</span>
+                  <span className="text-white text-xs font-semibold">
+                    {t("auth.edit_image")}
+                  </span>
                 </div>
               </label>
             </div>
@@ -182,7 +188,7 @@ function Profile({ onClose }) {
           <div className="flex gap-3 mb-4">
             <div className="w-1/2">
               <label className="block text-gray-700 text-base mb-1">
-                First Name
+                {t("auth.first_name_label")}
               </label>
               <input
                 type="text"
@@ -196,7 +202,7 @@ function Profile({ onClose }) {
             </div>
             <div className="w-1/2">
               <label className="block text-gray-700 text-base mb-1">
-                Last Name
+                {t("auth.last_name_label")}
               </label>
               <input
                 type="text"
@@ -211,7 +217,9 @@ function Profile({ onClose }) {
           </div>
           {/* Phone */}
           <div className="mb-4">
-            <label className="block text-gray-700 text-base mb-1">Phone</label>
+            <label className="block text-gray-700 text-base mb-1">
+              {t("auth.phone_label")}
+            </label>
             <div className="flex items-center bg-[#f7f7f7] rounded-lg border border-gray-300 px-2 py-1 focus-within:ring-2 focus-within:ring-[#a41c1c]">
               {/* <span className="flex items-center px-2">
                 <img
@@ -233,7 +241,9 @@ function Profile({ onClose }) {
           </div>
           {/* Email */}
           <div className="mb-4">
-            <label className="block text-gray-700 text-base mb-1">Email</label>
+            <label className="block text-gray-700 text-base mb-1">
+              {t("auth.email_label")}
+            </label>
             <input
               type="email"
               name="email"
@@ -242,16 +252,16 @@ function Profile({ onClose }) {
               className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#a41c1c] text-base bg-[#f7f7f7]"
               placeholder="email@example.com"
               disabled
-              title="Email cannot be changed"
+              title={t("auth.email_cannot_change")}
             />
             <p className="text-xs text-gray-500 mt-1">
-              Email cannot be changed
+              {t("auth.email_cannot_change")}
             </p>
           </div>
           {/* Company Name */}
           <div className="mb-6">
             <label className="block text-gray-700 text-base mb-1">
-              Company Name
+              {t("auth.company_name_label")}
             </label>
             <input
               type="text"
@@ -271,7 +281,7 @@ function Profile({ onClose }) {
           {/* Success Toast */}
           {success && (
             <div className="mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded-lg text-sm animate-pulse">
-              ✓ Profile updated successfully!
+              ✓ {t("auth.profile_updated")}
             </div>
           )}
           {/* Update Profile Button */}
@@ -280,7 +290,7 @@ function Profile({ onClose }) {
             disabled={updating}
             className="w-full bg-[#b80000] hover:bg-[#a41c1c] disabled:bg-gray-400 text-white text-lg font-semibold rounded-lg py-3 mb-3 transition-colors duration-200"
           >
-            {updating ? "Updating..." : "Update Profile"}
+            {updating ? t("auth.updating") : t("auth.update_profile_button")}
           </button>
         </form>
       </div>

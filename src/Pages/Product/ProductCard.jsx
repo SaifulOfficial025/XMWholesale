@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import { useCart } from "../../Context/CartContext";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 function ProductCard({ product, onProductClick }) {
+  const { t } = useTranslation();
   const { addToCart } = useCart();
   const navigate = useNavigate();
   const [showSuccess, setShowSuccess] = useState(false);
@@ -69,7 +71,7 @@ function ProductCard({ product, onProductClick }) {
         )} */}
         <Link to={`/product/details/${product.id}`}>
           <button className="w-full mt-auto bg-red-600 hover:bg-red-700 text-white font-semibold rounded border-2 py-2 text-base transition shadow-sm">
-            ADD TO CART
+            {t("product_list.add_to_cart")}
           </button>
         </Link>
       </div>

@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import Thankyousignup from "./Thankyousignup";
 import { verifyOTP } from "../../Redux/Auth/Signup";
 
 function OTPVerification({ email, onClose }) {
+  const { t } = useTranslation();
   const [otp, setOtp] = useState("");
   const [timer, setTimer] = useState(21);
   const [showThankYou, setShowThankYou] = useState(false);
@@ -23,7 +25,7 @@ function OTPVerification({ email, onClose }) {
     setError("");
 
     if (!otp || otp.length < 4) {
-      setError("Please enter a valid OTP");
+      setError(t("auth.enter_valid_otp"));
       return;
     }
 
@@ -50,7 +52,7 @@ function OTPVerification({ email, onClose }) {
         }, 2000);
       }
     } catch (err) {
-      setError(err.message || "OTP verification failed. Please try again.");
+      setError(err.message || t("auth.otp_verification_failed"));
     } finally {
       setLoading(false);
     }
@@ -74,10 +76,10 @@ function OTPVerification({ email, onClose }) {
         style={{ boxShadow: "0 4px 24px 0 rgba(0,0,0,0.15)" }}
       >
         <h2 className="text-2xl font-semibold text-center mb-2">
-          OTP Code Verification
+          {t("auth.otp_verification_title")}
         </h2>
         <p className="text-center text-base text-gray-700 mb-6">
-          Please enter the OTP which is sent to O1****
+          {t("auth.otp_sent_to")}
         </p>
         <form onSubmit={handleSubmit}>
           <input
@@ -100,12 +102,12 @@ function OTPVerification({ email, onClose }) {
             disabled={loading}
             className="w-full bg-[#b80000] hover:bg-[#a41c1c] disabled:bg-gray-400 text-white text-lg font-semibold rounded-lg py-3 mb-3 transition-colors duration-200"
           >
-            {loading ? "Verifying..." : "Verify"}
+            {loading ? t("auth.verifying") : t("auth.verify_button")}
           </button>
         </form>
         <div className="text-center mt-2 text-base">
-          <span className="text-gray-700">Not received OTP? </span>
-          <span className="text-gray-700">Resend OTP </span>
+          <span className="text-gray-700">{t("auth.not_received_otp")} </span>
+          <span className="text-gray-700">{t("auth.resend_otp_text")} </span>
           <span className="text-[#b80000] font-semibold">
             {timer > 0 ? `00:${timer.toString().padStart(2, "0")}` : "00:00"}
           </span>

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { fetchCategories } from "../../Redux/Product/Category";
+import { useTranslation } from "react-i18next";
 
 function Category() {
+  const { t } = useTranslation();
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -25,7 +27,7 @@ function Category() {
   return (
     <div className="max-w-7xl mx-auto px-4 mt-16">
       <h2 className="text-2xl md:text-3xl font-bold text-center mb-8 tracking-wide">
-        DISCOVER OUR PRODUCT CATEGORY
+        {t("hero_and_banners.discover_category")}
       </h2>
 
       {loading ? (

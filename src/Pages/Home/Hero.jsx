@@ -1,6 +1,8 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 function Hero() {
+  const { t } = useTranslation();
   return (
     <section
       className="min-h-screen bg-cover bg-center relative flex items-center"
@@ -19,7 +21,7 @@ function Hero() {
             href="/products"
             className="inline-block bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-3 shadow mt-96"
           >
-            SEE ALL PRODUCT
+            {t("hero_and_banners.see_all_products")}
           </a>
         </div>
       </div>

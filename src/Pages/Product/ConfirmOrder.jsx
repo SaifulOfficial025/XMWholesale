@@ -5,8 +5,10 @@ import { FaArrowRight, FaTrash } from "react-icons/fa6";
 import { useCart } from "../../Context/CartContext";
 import { Link, useNavigate } from "react-router-dom";
 import { placeOrder } from "../../Redux/Product/ConfirmOrder";
+import { useTranslation } from "react-i18next";
 
 function ConfirmOrder() {
+  const { t } = useTranslation();
   const { cartItems, removeFromCart, updateQuantity, getCartTotal, clearCart } =
     useCart();
   const navigate = useNavigate();
@@ -45,7 +47,10 @@ function ConfirmOrder() {
 
       // Show success message
       setSuccessMessage(
-        `Order placed successfully! Order ID: ${response.uuid}`,
+        t("checkout.order_success", { orderId: response.uuid }).replace(
+          "{orderId}",
+          response.uuid,
+        ),
       );
 
       // Clear cart and redirect after 3 seconds
@@ -55,7 +60,7 @@ function ConfirmOrder() {
       }, 3000);
     } catch (err) {
       console.error("Error placing order:", err);
-      setError(err.message || "Failed to place order. Please try again.");
+      setError(err.message || t("checkout.order_failed"));
     } finally {
       setLoading(false);
     }
@@ -73,7 +78,7 @@ function ConfirmOrder() {
             <div className="p-6 bg-green-100 border-4 border-green-400 text-green-700 rounded-xl text-lg font-semibold mb-6 animate-pulse">
               ✓ {successMessage}
             </div>
-            <p className="text-gray-600 mb-4">Redirecting to home page...</p>
+            <p className="text-gray-600 mb-4">{t("checkout.redirecting")}</p>
           </div>
         </div>
         <Footer />
@@ -89,10 +94,10 @@ function ConfirmOrder() {
         </div>
         <div className="bg-white min-h-screen py-8 px-2 md:px-8 flex items-center justify-center">
           <div className="text-center">
-            <p className="text-gray-600 mb-4">Your cart is empty</p>
+            <p className="text-gray-600 mb-4">{t("checkout.cart_empty")}</p>
             <Link to="/products">
               <button className="bg-[#c0121a] text-white font-semibold px-6 py-2 rounded shadow hover:bg-[#a70c17] transition">
-                Continue Shopping
+                {t("checkout.continue_shopping")}
               </button>
             </Link>
           </div>
@@ -108,15 +113,15 @@ function ConfirmOrder() {
         <Header />
       </div>
 
-      <div className="bg-white min-h-screen py-8 px-2 md:px-8">
+      <div className="bg-white min-h-screen py-8 px-2 md:px-8 pb-32">
         {/* Breadcrumbs */}
         <div className="max-w-7xl mx-auto w-full mb-2">
           <nav className="text-xs text-gray-500 gap-1 flex flex-wrap items-center">
-            <span>Product</span>
+            <span>{t("checkout.breadcrumb_product")}</span>
             <FaArrowRight className=" justify-center" />
-            <span>Product Details</span>
+            <span>{t("checkout.breadcrumb_details")}</span>
             <FaArrowRight className=" justify-center" />
-            <span>Product Confirmation</span>
+            <span>{t("checkout.breadcrumb_confirmation")}</span>
           </nav>
         </div>
         <div className="max-w-7xl mx-auto w-full grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -146,15 +151,24 @@ function ConfirmOrder() {
                       {item.name}
                     </h2>
                     <div className="text-xl md:text-2xl font-bold text-gray-900">
-                      ${parseFloat(item.price) * item.quantity}
+                      ${(parseFloat(item.price) * item.quantity).toFixed(2)}
                     </div>
                   </div>
                   <div className="text-sm text-gray-600 mb-2">
-                    <span>SKU: {item.sku || "N/A"}</span> |
-                    <span className="ml-2">Price: ${item.price}/box</span>
+                    <span>
+                      {t("checkout.sku_label")} {item.sku || "N/A"}
+                    </span>{" "}
+                    |
+                    <span className="ml-2">
+                      {t("checkout.price_label")} $
+                      {parseFloat(item.price).toFixed(2)}
+                      {t("checkout.per_box")}
+                    </span>
                   </div>
                   <div className="flex items-center gap-4 mt-2">
-                    <span className="font-semibold text-sm">Quantity:</span>
+                    <span className="font-semibold text-sm">
+                      {t("checkout.quantity_label")}
+                    </span>
                     <div className="flex items-center border rounded">
                       <button
                         onClick={() =>
@@ -179,7 +193,9 @@ function ConfirmOrder() {
                         +
                       </button>
                     </div>
-                    <span className="text-sm text-gray-700">Boxes</span>
+                    <span className="text-sm text-gray-700">
+                      {t("checkout.boxes")}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -189,24 +205,28 @@ function ConfirmOrder() {
           <div>
             <div className="bg-white rounded-xl shadow p-6 border flex flex-col gap-4 sticky top-20">
               <h3 className="text-lg font-semibold text-gray-900">
-                Order Summary
+                {t("checkout.order_summary")}
               </h3>
               <div className="border-t border-gray-200 pt-4">
                 <div className="flex flex-col gap-2 mb-4">
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600">Subtotal</span>
+                    <span className="text-gray-600">
+                      {t("checkout.subtotal")}
+                    </span>
                     <span className="font-semibold">
                       ${getCartTotal().toFixed(2)}
                     </span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600">Items</span>
+                    <span className="text-gray-600">{t("checkout.items")}</span>
                     <span className="font-semibold">{cartItems.length}</span>
                   </div>
                 </div>
                 <div className="border-t border-gray-200 pt-4 mb-2">
                   <div className="flex items-center justify-between">
-                    <span className="font-semibold text-lg">Total</span>
+                    <span className="font-semibold text-lg">
+                      {t("checkout.total")}
+                    </span>
                     <span className="font-bold text-xl text-[#c0121a]">
                       ${getCartTotal().toFixed(2)}
                     </span>
@@ -214,8 +234,7 @@ function ConfirmOrder() {
                 </div>
               </div>
               <div className="text-xs text-gray-600 mb-2">
-                * Delivery Charges Might Vary Depending On Product Size And
-                Weight.
+                {t("checkout.delivery_notice")}
               </div>
               {error && (
                 <div className="p-3 bg-red-100 border border-red-400 text-red-700 rounded text-sm mb-2">
@@ -229,11 +248,11 @@ function ConfirmOrder() {
               )}
               {!isLoggedIn && (
                 <div className="p-3 bg-yellow-100 border border-yellow-400 text-yellow-700 rounded text-sm mb-2">
-                  Please{" "}
+                  {t("checkout.login_message").split("{login}")[0]}
                   <Link to="/signin" className="font-semibold underline">
-                    login
-                  </Link>{" "}
-                  to place an order.
+                    {t("checkout.login_link")}
+                  </Link>
+                  {t("checkout.login_message").split("{login}")[1]}
                 </div>
               )}
               <button
@@ -242,21 +261,21 @@ function ConfirmOrder() {
                 className="bg-[#c0121a] text-white font-semibold px-6 py-3 rounded shadow hover:bg-[#a70c17] transition mt-2 w-full text-center disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading
-                  ? "Processing..."
+                  ? t("checkout.processing")
                   : !isLoggedIn
-                    ? "Login to Order"
-                    : "Confirm Order"}
+                    ? t("checkout.login_to_order")
+                    : t("checkout.confirm_order")}
               </button>
               <Link to="/products" className="text-center">
                 <button className="bg-gray-200 text-gray-800 font-semibold px-6 py-2 rounded shadow hover:bg-gray-300 transition w-full">
-                  Continue Shopping
+                  {t("checkout.continue_shopping")}
                 </button>
               </Link>
             </div>
           </div>
         </div>
       </div>
-      <div className="-mt-20 md:-mt-44">
+      <div className="mt-0">
         <Footer />
       </div>
     </section>

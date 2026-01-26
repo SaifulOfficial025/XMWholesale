@@ -6,8 +6,10 @@ import { LuPhone } from "react-icons/lu";
 import { FaChevronDown } from "react-icons/fa";
 import SignIn from "../Pages/Authentication/SignIn";
 import Profile from "../Pages/Authentication/Profile";
+import { useTranslation } from "react-i18next";
 
 function Header() {
+  const { t, i18n } = useTranslation();
   const [showSignIn, setShowSignIn] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
@@ -100,7 +102,7 @@ function Header() {
                     isActive ? "text-red-500" : "hover:text-red-400"
                   }
                 >
-                  HOME
+                  {t("navbar.home")}
                 </NavLink>
               </li>
               <li>
@@ -110,7 +112,7 @@ function Header() {
                     isActive ? "text-red-500" : "hover:text-red-400"
                   }
                 >
-                  PRODUCT
+                  {t("navbar.product")}
                 </NavLink>
               </li>
               <li>
@@ -120,7 +122,7 @@ function Header() {
                     isActive ? "text-red-500" : "hover:text-red-400"
                   }
                 >
-                  ABOUT
+                  {t("navbar.about")}
                 </NavLink>
               </li>
             </ul>
@@ -139,8 +141,8 @@ function Header() {
             </button>
             <div className="hidden sm:flex items-center gap-3 text-sm">
               <div className="leading-tight text-right">
-                <div className="text-md opacity-80">Call Us Now:</div>
-                <div className="font-semibold">+(258) 2159-2159</div>
+                <div className="text-md opacity-80">{t("navbar.call_us")}</div>
+                <div className="font-semibold">{t("navbar.phone_number")}</div>
               </div>
               <LuPhone className="h-8 w-8 bg-white text-black rounded-full p-1.5 hover:bg-red-400 flex items-center justify-center" />
             </div>
@@ -150,6 +152,13 @@ function Header() {
                 <IoCartOutline size={18} />
               </button>
             </Link>
+
+            <button
+              onClick={() => i18n.changeLanguage(i18n.language === "en" ? "fr" : "en")}
+              className="bg-white text-black px-2 py-0.5 rounded-sm hover:bg-black hover:text-white transition duration-300"
+            >
+              {i18n.language === "en" ? "FR" : "EN"}
+            </button>
 
             {isLoggedIn ? (
               <div className="relative">
@@ -216,7 +225,7 @@ function Header() {
                     }
                     onClick={() => setShowMenu(false)}
                   >
-                    HOME
+                    {t("navbar.home")}
                   </NavLink>
                 </li>
                 <li>
@@ -227,7 +236,7 @@ function Header() {
                     }
                     onClick={() => setShowMenu(false)}
                   >
-                    PRODUCT
+                    {t("navbar.product")}
                   </NavLink>
                 </li>
                 <li>
@@ -238,15 +247,15 @@ function Header() {
                     }
                     onClick={() => setShowMenu(false)}
                   >
-                    ABOUT
+                    {t("navbar.about")}
                   </NavLink>
                 </li>
               </ul>
             </nav>
 
             <div className="mt-6 border-t border-white/10 pt-4 text-sm">
-              <div className="opacity-80">Call Us Now:</div>
-              <div className="font-semibold">+(258) 2159-2159</div>
+              <div className="opacity-80">{t("navbar.call_us")}</div>
+              <div className="font-semibold">{t("navbar.phone_number")}</div>
             </div>
 
             <div className="mt-6 flex items-center gap-3">

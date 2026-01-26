@@ -6,8 +6,10 @@ import { FaArrowRight } from "react-icons/fa6";
 import { Link, useParams } from "react-router-dom";
 import { fetchProductDetails } from "../../Redux/Product/ProductDetails";
 import { useCart } from "../../Context/CartContext";
+import { useTranslation } from "react-i18next";
 
 function ProductDetails() {
+  const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
   const { addToCart } = useCart();
@@ -44,7 +46,7 @@ function ProductDetails() {
           <Header />
         </div>
         <div className="bg-white min-h-screen py-8 px-2 md:px-8 flex items-center justify-center">
-          <p className="text-gray-600">Loading product details...</p>
+          <p className="text-gray-600">{t("product_details.loading")}</p>
         </div>
         <Footer />
       </section>
@@ -58,7 +60,9 @@ function ProductDetails() {
           <Header />
         </div>
         <div className="bg-white min-h-screen py-8 px-2 md:px-8 flex items-center justify-center">
-          <p className="text-red-600">{error || "Product not found"}</p>
+          <p className="text-red-600">
+            {error || t("product_details.not_found")}
+          </p>
         </div>
         <Footer />
       </section>
@@ -80,9 +84,9 @@ function ProductDetails() {
         {/* Breadcrumbs */}
         <div className="max-w-7xl mx-auto w-full  flex items-center justify-between mb-2">
           <nav className="text-xs text-gray-500  gap-1 flex items-center justify-center">
-            <span>Product</span>
+            <span>{t("product_details.breadcrumb_product")}</span>
             <FaArrowRight className=" justify-center" />
-            <span>Product Details</span>
+            <span>{t("product_details.breadcrumb_details")}</span>
           </nav>
           <hr className="my-4" />
         </div>
@@ -128,40 +132,52 @@ function ProductDetails() {
               ${product.price}
             </div>
             <p className="text-gray-600 text-sm mb-2">
-              {product.description || "No description available"}
+              {product.description || t("product_details.no_description")}
             </p>
             <div className=" gap-8 mb-2">
               <div className="text-sm text-gray-700">
-                <span className="font-semibold">1 Box:</span>{" "}
+                <span className="font-semibold">
+                  {t("product_details.box_label")}
+                </span>{" "}
                 <span className="text-black font-semibold">
-                  {product.box_per_item} item
+                  {product.box_per_item} {t("product_details.item")}
                 </span>
               </div>
               <div className="text-sm text-gray-700 mt-2">
-                <span className="font-semibold">SKU:</span>{" "}
+                <span className="font-semibold">
+                  {t("product_details.sku_label")}
+                </span>{" "}
                 <span className="text-black font-semibold">{product.sku}</span>
               </div>
               <div className="text-sm text-gray-700 mt-2">
-                <span className="font-semibold">Quantity:</span>{" "}
+                <span className="font-semibold">
+                  {t("product_details.quantity_label")}
+                </span>{" "}
                 <span className="text-black font-semibold">
                   {product.quantity}
                 </span>
               </div>
               <div className="text-sm text-gray-700 mt-2">
-                <span className="font-semibold">Category:</span>{" "}
+                <span className="font-semibold">
+                  {t("product_details.category_label")}
+                </span>{" "}
                 <span className="text-black font-semibold">
                   {product.category}
                 </span>
               </div>
               <div className="text-sm text-gray-700 mt-2">
-                <span className="font-semibold">Brand:</span>{" "}
+                <span className="font-semibold">
+                  {t("product_details.brand_label")}
+                </span>{" "}
                 <span className="text-black font-semibold">
                   {product.brand}
                 </span>
               </div>
             </div>
             <div className="flex items-center gap-4 mt-2">
-              <span className="text-base font-medium">Quantity:</span>
+              <span className="text-base font-medium">
+                {t("product_details.quantity_select")}
+              </span>
               <div className="flex items-center border rounded">
                 <button
                   className="px-3 py-1 text-lg text-gray-700 hover:bg-gray-100"
@@ -177,7 +193,9 @@ function ProductDetails() {
                   +
                 </button>
               </div>
-              <span className="ml-2 text-base font-medium">Boxes</span>
+              <span className="ml-2 text-base font-medium">
+                {t("product_details.boxes")}
+              </span>
             </div>
             <div className="flex gap-3 mt-6">
               <button
@@ -188,17 +206,20 @@ function ProductDetails() {
                 }}
                 className="bg-black text-white font-semibold px-7 py-3 shadow hover:bg-gray-800 transition"
               >
-                ADD TO CART
+                {t("product_details.add_to_cart")}
               </button>
               <Link to="/checkout" className="ml-3">
                 <button className="bg-[#c0121a] text-white font-semibold px-7 py-3  shadow hover:bg-[#a70c17] transition">
-                  GO TO CART
+                  {t("product_details.go_to_cart")}
                 </button>
               </Link>
             </div>
             {showSuccess && (
               <div className="mt-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded-lg text-sm animate-pulse text-center">
-                ✓ Added {quantity} box(es) to cart!
+                ✓{" "}
+                {t("product_details.added_to_cart", {
+                  count: quantity,
+                }).replace("{count}", quantity)}
               </div>
             )}
           </div>

@@ -6,8 +6,10 @@ import { FaEyeSlash } from "react-icons/fa";
 import Signup from "./Signup";
 import ForgetPassword from "./ForgetPassword";
 import { loginUser } from "../../Redux/Auth/Signin";
+import { useTranslation } from "react-i18next";
 
 export default function SignIn({ onClose }) {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState("login");
   const [showPassword, setShowPassword] = useState(false);
   const [showForgetPassword, setShowForgetPassword] = useState(false);
@@ -62,7 +64,7 @@ export default function SignIn({ onClose }) {
 
       // Close modal and let Header update via event/listener
     } catch (err) {
-      setError(err.message || "Login failed. Please check your credentials.");
+      setError(err.message || t("auth.login_failed"));
     } finally {
       setLoading(false);
     }
@@ -95,7 +97,7 @@ export default function SignIn({ onClose }) {
             }`}
             onClick={() => setActiveTab("login")}
           >
-            Log In
+            {t("auth.login_tab")}
           </button>
           <button
             className={`px-4 py-2 font-medium text-lg focus:outline-none ${
@@ -105,7 +107,7 @@ export default function SignIn({ onClose }) {
             }`}
             onClick={() => setActiveTab("signup")}
           >
-            Sign Up
+            {t("auth.signup_tab")}
           </button>
         </div>
 
@@ -114,7 +116,7 @@ export default function SignIn({ onClose }) {
             {/* Email */}
             <div className="mb-4">
               <label className="block text-gray-700 text-base mb-1">
-                Email
+                {t("auth.email_label")}
               </label>
               <input
                 type="email"
@@ -122,14 +124,14 @@ export default function SignIn({ onClose }) {
                 value={formData.email}
                 onChange={handleInputChange}
                 className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#a41c1c] text-base bg-[#f7f7f7]"
-                placeholder="Enter your email"
+                placeholder={t("auth.email_placeholder")}
                 required
               />
             </div>
             {/* Password */}
             <div className="mb-2">
               <label className="block text-gray-700 text-base mb-1">
-                Password
+                {t("auth.password_label")}
               </label>
               <div className="relative">
                 <input
@@ -138,7 +140,7 @@ export default function SignIn({ onClose }) {
                   value={formData.password}
                   onChange={handleInputChange}
                   className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#a41c1c] text-base bg-[#f7f7f7] pr-10"
-                  placeholder="Enter your password"
+                  placeholder={t("auth.password_placeholder")}
                   required
                 />
                 <button
@@ -162,7 +164,7 @@ export default function SignIn({ onClose }) {
                 className="text-sm text-gray-500 hover:underline"
                 onClick={() => setShowForgetPassword(true)}
               >
-                Forgot Password?
+                {t("auth.forgot_password")}
               </button>
             </div>
             {/* Error Message */}
@@ -177,13 +179,13 @@ export default function SignIn({ onClose }) {
               disabled={loading}
               className="w-full bg-[#b80000] hover:bg-[#a41c1c] disabled:bg-gray-400 text-white text-lg font-semibold rounded-lg py-3 mb-3 transition-colors duration-200"
             >
-              {loading ? "Logging in..." : "Log in"}
+              {loading ? t("auth.logging_in") : t("auth.login_button")}
             </button>
             {/* Or Continue With */}
             <div className="flex items-center my-3">
               <div className="flex-grow h-px bg-gray-200" />
               <span className="mx-2 text-gray-400 text-sm">
-                Or Continue With
+                {t("auth.or_continue_with")}
               </span>
               <div className="flex-grow h-px bg-gray-200" />
             </div>
@@ -193,7 +195,7 @@ export default function SignIn({ onClose }) {
               className="w-full flex items-center justify-center gap-2 bg-[#f5f5f5] border border-gray-200 rounded-lg py-3 text-base font-medium text-gray-700 hover:bg-gray-100 mb-2"
             >
               <FaGoogle className="text-xl" />
-              Continue with Google
+              {t("auth.continue_google")}
             </button>
             {/* Sign Up Link */}
             {/* <div className="text-center mt-4 text-gray-600 text-base">

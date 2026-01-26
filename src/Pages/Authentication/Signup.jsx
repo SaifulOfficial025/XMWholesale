@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import OTPVerification from "./OTPVerification";
 import { registerUser } from "../../Redux/Auth/Signup";
+import { useTranslation } from "react-i18next";
 
 function Signup({ activeTab, setActiveTab, onClose }) {
+  const { t } = useTranslation();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [showOTP, setShowOTP] = useState(false);
@@ -35,7 +37,7 @@ function Signup({ activeTab, setActiveTab, onClose }) {
 
     // Validate passwords match
     if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match");
+      setError(t("auth.passwords_no_match"));
       return;
     }
 
@@ -49,7 +51,7 @@ function Signup({ activeTab, setActiveTab, onClose }) {
       // Show OTP verification modal
       setShowOTP(true);
     } catch (err) {
-      setError(err.message || "Registration failed. Please try again.");
+      setError(err.message || t("auth.registration_failed"));
     } finally {
       setLoading(false);
     }
@@ -62,7 +64,7 @@ function Signup({ activeTab, setActiveTab, onClose }) {
         <div className="flex gap-3 mb-4">
           <div className="w-1/2">
             <label className="block text-gray-700 text-base mb-1">
-              First Name
+              {t("auth.first_name_label")}
             </label>
             <input
               type="text"
@@ -70,13 +72,13 @@ function Signup({ activeTab, setActiveTab, onClose }) {
               value={formData.firstName}
               onChange={handleInputChange}
               className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#a41c1c] text-base bg-[#f7f7f7]"
-              placeholder="Enter your first name"
+              placeholder={t("auth.first_name_placeholder")}
               required
             />
           </div>
           <div className="w-1/2">
             <label className="block text-gray-700 text-base mb-1">
-              Last Name
+              {t("auth.last_name_label")}
             </label>
             <input
               type="text"
@@ -84,28 +86,32 @@ function Signup({ activeTab, setActiveTab, onClose }) {
               value={formData.lastName}
               onChange={handleInputChange}
               className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#a41c1c] text-base bg-[#f7f7f7]"
-              placeholder="Enter your last name"
+              placeholder={t("auth.last_name_placeholder")}
               required
             />
           </div>
         </div>
         {/* Email */}
         <div className="mb-4">
-          <label className="block text-gray-700 text-base mb-1">Email</label>
+          <label className="block text-gray-700 text-base mb-1">
+            {t("auth.email_label")}
+          </label>
           <input
             type="email"
             name="email"
             value={formData.email}
             onChange={handleInputChange}
             className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#a41c1c] text-base bg-[#f7f7f7]"
-            placeholder="Enter your email"
+            placeholder={t("auth.email_placeholder")}
             required
           />
         </div>
 
         {/* password */}
         <div className="mb-4">
-          <label className="block text-gray-700 text-base mb-1">Password</label>
+          <label className="block text-gray-700 text-base mb-1">
+            {t("auth.password_label")}
+          </label>
           <div className="relative">
             <input
               type={showPassword ? "text" : "password"}
@@ -113,7 +119,7 @@ function Signup({ activeTab, setActiveTab, onClose }) {
               value={formData.password}
               onChange={handleInputChange}
               className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#a41c1c] text-base bg-[#f7f7f7] pr-10"
-              placeholder="Enter your password"
+              placeholder={t("auth.password_placeholder")}
               required
             />
             <button
@@ -134,7 +140,7 @@ function Signup({ activeTab, setActiveTab, onClose }) {
         {/* confirm password */}
         <div className="mb-4">
           <label className="block text-gray-700 text-base mb-1">
-            Confirm Password
+            {t("auth.confirm_password_label")}
           </label>
           <div className="relative">
             <input
@@ -143,7 +149,7 @@ function Signup({ activeTab, setActiveTab, onClose }) {
               value={formData.confirmPassword}
               onChange={handleInputChange}
               className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#a41c1c] text-base bg-[#f7f7f7] pr-10"
-              placeholder="Confirm your password"
+              placeholder={t("auth.confirm_password_placeholder")}
               required
             />
             <button
@@ -163,7 +169,9 @@ function Signup({ activeTab, setActiveTab, onClose }) {
 
         {/* Phone */}
         <div className="mb-4">
-          <label className="block text-gray-700 text-base mb-1">Phone</label>
+          <label className="block text-gray-700 text-base mb-1">
+            {t("auth.phone_label")}
+          </label>
           <div className="flex items-center bg-[#f7f7f7] rounded-lg border border-gray-300 px-2 py-1 focus-within:ring-2 focus-within:ring-[#a41c1c]">
             {/* <span className="flex items-center px-2">
               <img
@@ -178,7 +186,7 @@ function Signup({ activeTab, setActiveTab, onClose }) {
               value={formData.phone}
               onChange={handleInputChange}
               className="flex-1 px-2 py-2 bg-transparent outline-none border-none text-base"
-              placeholder="Enter your phone number"
+              placeholder={t("auth.phone_placeholder")}
               required
               style={{ minWidth: 0 }}
             />
@@ -187,7 +195,7 @@ function Signup({ activeTab, setActiveTab, onClose }) {
         {/* Company Name */}
         <div className="mb-6">
           <label className="block text-gray-700 text-base mb-1">
-            Company Name
+            {t("auth.company_name_label")}
           </label>
           <input
             type="text"
@@ -195,7 +203,7 @@ function Signup({ activeTab, setActiveTab, onClose }) {
             value={formData.companyName}
             onChange={handleInputChange}
             className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#a41c1c] text-base bg-[#f7f7f7]"
-            placeholder="Enter your company name"
+            placeholder={t("auth.company_name_placeholder")}
             required
           />
         </div>
@@ -211,7 +219,7 @@ function Signup({ activeTab, setActiveTab, onClose }) {
           disabled={loading}
           className="w-full bg-[#b80000] hover:bg-[#a41c1c] disabled:bg-gray-400 text-white text-lg font-semibold rounded-lg py-3 mb-3 transition-colors duration-200"
         >
-          {loading ? "Signing up..." : "Sign up"}
+          {loading ? t("auth.signing_up") : t("auth.signup_button")}
         </button>
         {/* Already Have Account Link */}
         {/* <div className="text-center mt-4 text-gray-600 text-base">

@@ -3,8 +3,10 @@ import { FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa";
 import Header from "../Shared/Header";
 import Footer from "../Shared/Footer";
 import { submitContactForm } from "../Redux/Contact";
+import { useTranslation } from "react-i18next";
 
 function Contact() {
+  const { t } = useTranslation();
   const [form, setForm] = React.useState({
     name: "",
     whatsapp: "",
@@ -17,11 +19,11 @@ function Contact() {
 
   const validate = () => {
     const newErrors = {};
-    if (!form.name.trim()) newErrors.name = "Full Name is required";
-    if (!form.email.trim()) newErrors.email = "Email is required";
+    if (!form.name.trim()) newErrors.name = t("contact.error_name");
+    if (!form.email.trim()) newErrors.email = t("contact.error_email_required");
     else if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(form.email))
-      newErrors.email = "Invalid email address";
-    if (!form.text.trim()) newErrors.text = "Message is required";
+      newErrors.email = t("contact.error_email_invalid");
+    if (!form.text.trim()) newErrors.text = t("contact.error_message");
     return newErrors;
   };
 
@@ -43,9 +45,7 @@ function Contact() {
         console.log("Contact form submitted successfully:", response);
 
         // Show success message
-        setSuccessMessage(
-          "Thank you! Your message has been sent successfully.",
-        );
+        setSuccessMessage(t("contact.success_message"));
 
         // Clear form
         setForm({ name: "", whatsapp: "", email: "", text: "" });
@@ -76,31 +76,45 @@ function Contact() {
             {/* Left: Contact Info */}
             <div>
               <h1 className="text-3xl font-bold text-[#c0121a] mb-3">
-                Contact Us
+                {t("contact.page_title")}
               </h1>
               <p className="text-gray-700 mb-5 text-sm max-w-md">
-                Have questions or need support? Our team is here to help you
-                with orders, returns, product info, and more.
+                {t("contact.page_desc")}
               </p>
               <div className="mb-3 flex items-start gap-2">
-                <span className="font-semibold">Address:</span>
+                <span className="font-semibold">
+                  {t("contact.address_label")}
+                </span>
                 <span className="text-gray-700 text-sm">
-                  4370 rue garand laval
-                  <br />
-                  Quebec Canada
+                  {t("contact.address_text")
+                    .split("\n")
+                    .map((line, i) => (
+                      <React.Fragment key={i}>
+                        {line}
+                        {i === 0 && <br />}
+                      </React.Fragment>
+                    ))}
                 </span>
               </div>
               <div className="mb-3 flex items-center gap-2">
-                <span className="font-semibold">Phone:</span>
-                <span className="text-gray-700 text-sm">514-354-7777</span>
-              </div>
-              <div className="mb-3 flex items-center gap-2">
-                <span className="font-semibold">Email:</span>
+                <span className="font-semibold">
+                  {t("contact.phone_label")}
+                </span>
                 <span className="text-gray-700 text-sm">
-                  info@kmwholesale.ca
+                  {t("contact.phone_number")}
                 </span>
               </div>
-              <div className="mt-6 mb-2 font-semibold">Follow Us</div>
+              <div className="mb-3 flex items-center gap-2">
+                <span className="font-semibold">
+                  {t("contact.email_label")}
+                </span>
+                <span className="text-gray-700 text-sm">
+                  {t("contact.email_address")}
+                </span>
+              </div>
+              <div className="mt-6 mb-2 font-semibold">
+                {t("contact.follow_us")}
+              </div>
               <div className="flex gap-4 text-2xl">
                 <a href="#" className="text-[#1877f3] hover:opacity-80">
                   <FaFacebook />
@@ -134,7 +148,8 @@ function Contact() {
                 <div className="flex flex-col md:flex-row gap-4">
                   <div className="flex-1">
                     <label className="block text-sm font-semibold mb-1">
-                      Full Name<span className="text-red-500">*</span>
+                      {t("contact.form_full_name")}
+                      <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
@@ -142,7 +157,7 @@ function Contact() {
                       className={`w-full border rounded px-3 py-2 text-sm ${
                         errors.name ? "border-red-500" : ""
                       }`}
-                      placeholder="Enter your full name"
+                      placeholder={t("contact.form_placeholder_name")}
                       value={form.name}
                       onChange={handleChange}
                       required
@@ -155,13 +170,13 @@ function Contact() {
                   </div>
                   <div className="flex-1">
                     <label className="block text-sm font-semibold mb-1">
-                      WhatsApp Number(Optional)
+                      {t("contact.form_whatsapp")}
                     </label>
                     <input
                       type="text"
                       name="whatsapp"
                       className="w-full border rounded px-3 py-2 text-sm"
-                      placeholder="Enter your WhatsApp number"
+                      placeholder={t("contact.form_placeholder_whatsapp")}
                       value={form.whatsapp}
                       onChange={handleChange}
                     />
@@ -169,7 +184,8 @@ function Contact() {
                 </div>
                 <div>
                   <label className="block text-sm font-semibold mb-1">
-                    Your Email<span className="text-red-500">*</span>
+                    {t("contact.form_email")}
+                    <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="email"
@@ -177,7 +193,7 @@ function Contact() {
                     className={`w-full border rounded px-3 py-2 text-sm ${
                       errors.email ? "border-red-500" : ""
                     }`}
-                    placeholder="Enter your email address"
+                    placeholder={t("contact.form_placeholder_email")}
                     value={form.email}
                     onChange={handleChange}
                     required
@@ -190,14 +206,15 @@ function Contact() {
                 </div>
                 <div>
                   <label className="block text-sm font-semibold mb-1">
-                    Your text<span className="text-red-500">*</span>
+                    {t("contact.form_message")}
+                    <span className="text-red-500">*</span>
                   </label>
                   <textarea
                     name="text"
                     className={`w-full border rounded px-3 py-2 text-sm min-h-[70px] ${
                       errors.text ? "border-red-500" : ""
                     }`}
-                    placeholder="Tell us about your idea..."
+                    placeholder={t("contact.form_placeholder_message")}
                     value={form.text}
                     onChange={handleChange}
                     required
@@ -213,7 +230,9 @@ function Contact() {
                   disabled={loading}
                   className="bg-[#c0121a] text-white font-semibold px-6 py-2 rounded shadow hover:bg-[#a70c17] transition w-fit mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {loading ? "Sending..." : "Send message"}
+                  {loading
+                    ? t("contact.form_sending")
+                    : t("contact.form_submit")}
                 </button>
               </form>
             </div>

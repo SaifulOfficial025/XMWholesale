@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
 import {
   sendForgetPasswordOTP,
   verifyForgetPasswordOTP,
@@ -9,6 +10,7 @@ import {
 } from "../../Redux/Auth/ForgetPassword";
 
 function ForgetPassword({ onClose }) {
+  const { t } = useTranslation();
   const [step, setStep] = useState(1);
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
@@ -35,7 +37,7 @@ function ForgetPassword({ onClose }) {
     setError("");
 
     if (!email) {
-      setError("Please enter your email");
+      setError(t("auth.enter_email_error"));
       return;
     }
 
@@ -46,7 +48,7 @@ function ForgetPassword({ onClose }) {
       setTimer(21); // Start 21-second timer
       setSuccess(false);
     } catch (err) {
-      setError(err.message || "Failed to send OTP");
+      setError(err.message || t("auth.send_otp_failed"));
     } finally {
       setLoading(false);
     }
@@ -57,7 +59,7 @@ function ForgetPassword({ onClose }) {
     setError("");
 
     if (!otp) {
-      setError("Please enter OTP");
+      setError(t("auth.enter_otp_error"));
       return;
     }
 
@@ -76,7 +78,7 @@ function ForgetPassword({ onClose }) {
       setStep(3);
       setSuccess(false);
     } catch (err) {
-      setError(err.message || "OTP verification failed");
+      setError(err.message || t("auth.otp_verify_failed"));
     } finally {
       setLoading(false);
     }
@@ -88,12 +90,12 @@ function ForgetPassword({ onClose }) {
     setSuccess(false);
 
     if (!password || !confirmPassword) {
-      setError("Please enter both password fields");
+      setError(t("auth.enter_passwords_error"));
       return;
     }
 
     if (password !== confirmPassword) {
-      setError("Passwords do not match");
+      setError(t("auth.passwords_no_match_error"));
       return;
     }
 
@@ -113,7 +115,7 @@ function ForgetPassword({ onClose }) {
         navigate("/");
       }, 2000);
     } catch (err) {
-      setError(err.message || "Failed to change password");
+      setError(err.message || t("auth.change_password_failed"));
     } finally {
       setLoading(false);
     }
@@ -128,7 +130,7 @@ function ForgetPassword({ onClose }) {
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
     } catch (err) {
-      setError(err.message || "Failed to resend OTP");
+      setError(err.message || t("auth.resend_otp_failed"));
     } finally {
       setLoading(false);
     }
@@ -153,7 +155,7 @@ function ForgetPassword({ onClose }) {
         )}
 
         <h2 className="text-2xl font-semibold text-center mb-6 text-gray-800">
-          Forget Password
+          {t("auth.forget_password_title")}
         </h2>
 
         <form>
@@ -165,14 +167,14 @@ function ForgetPassword({ onClose }) {
           >
             <div className="mb-4">
               <label className="block text-gray-700 text-base mb-1">
-                Email
+                {t("auth.email_label")}
               </label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#a41c1c] text-base bg-[#f7f7f7]"
-                placeholder="Enter your email"
+                placeholder={t("auth.email_placeholder")}
                 required
               />
             </div>
@@ -189,7 +191,7 @@ function ForgetPassword({ onClose }) {
                   disabled={loading}
                   className="w-full bg-[#b80000] hover:bg-[#a41c1c] disabled:bg-gray-400 text-white text-lg font-semibold rounded-lg py-3 mb-3 transition-colors duration-200"
                 >
-                  {loading ? "Sending..." : "Send OTP"}
+                  {loading ? t("auth.sending") : t("auth.send_otp_button")}
                 </button>
               </>
             )}
@@ -205,14 +207,14 @@ function ForgetPassword({ onClose }) {
               <>
                 <div className="mb-4">
                   <label className="block text-gray-700 text-base mb-1">
-                    OTP Code
+                    {t("auth.otp_label")}
                   </label>
                   <input
                     type="text"
                     value={otp}
                     onChange={(e) => setOtp(e.target.value)}
                     className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#a41c1c] text-base bg-[#f7f7f7]"
-                    placeholder="Enter OTP"
+                    placeholder={t("auth.otp_placeholder")}
                     maxLength={6}
                     required
                   />
@@ -226,7 +228,7 @@ function ForgetPassword({ onClose }) {
                     )}
                     {success && (
                       <div className="mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded-lg text-sm animate-pulse">
-                        ✓ OTP verified successfully!
+                        ✓ {t("auth.otp_verified")}
                       </div>
                     )}
                     <button
@@ -235,12 +237,12 @@ function ForgetPassword({ onClose }) {
                       disabled={loading}
                       className="w-full bg-[#b80000] hover:bg-[#a41c1c] disabled:bg-gray-400 text-white text-lg font-semibold rounded-lg py-3 mb-3 transition-colors duration-200"
                     >
-                      {loading ? "Verifying..." : "Verify"}
+                      {loading ? t("auth.verifying") : t("auth.verify_button")}
                     </button>
 
                     <div className="text-center mt-3 text-sm">
                       <span className="text-gray-700">
-                        Didn't receive OTP?{" "}
+                        {t("auth.didnt_receive")}{" "}
                       </span>
                       <button
                         type="button"
@@ -248,7 +250,9 @@ function ForgetPassword({ onClose }) {
                         disabled={timer > 0 || loading}
                         className="text-[#b80000] font-semibold hover:underline disabled:text-gray-400 disabled:cursor-not-allowed"
                       >
-                        {timer > 0 ? `Resend (${timer}s)` : "Resend OTP"}
+                        {timer > 0
+                          ? t("auth.resend_countdown", { seconds: timer })
+                          : t("auth.resend_otp")}
                       </button>
                     </div>
                   </>
@@ -267,7 +271,7 @@ function ForgetPassword({ onClose }) {
               <>
                 <div className="mb-4">
                   <label className="block text-gray-700 text-base mb-1">
-                    New Password
+                    {t("auth.new_password_label")}
                   </label>
                   <div className="relative">
                     <input
@@ -275,7 +279,7 @@ function ForgetPassword({ onClose }) {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#a41c1c] text-base bg-[#f7f7f7] pr-10"
-                      placeholder="Enter new password"
+                      placeholder={t("auth.new_password_placeholder")}
                       required
                     />
                     <button
@@ -295,7 +299,7 @@ function ForgetPassword({ onClose }) {
 
                 <div className="mb-6">
                   <label className="block text-gray-700 text-base mb-1">
-                    Confirm Password
+                    {t("auth.confirm_password_new_label")}
                   </label>
                   <div className="relative">
                     <input
@@ -303,7 +307,7 @@ function ForgetPassword({ onClose }) {
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#a41c1c] text-base bg-[#f7f7f7] pr-10"
-                      placeholder="Confirm password"
+                      placeholder={t("auth.confirm_password_new_placeholder")}
                       required
                     />
                     <button
@@ -329,7 +333,7 @@ function ForgetPassword({ onClose }) {
                   disabled={loading}
                   className="w-full bg-[#b80000] hover:bg-[#a41c1c] disabled:bg-gray-400 text-white text-lg font-semibold rounded-lg py-3 mb-3 transition-colors duration-200"
                 >
-                  {loading ? "Saving..." : "Save Password"}
+                  {loading ? t("auth.saving") : t("auth.save_password_button")}
                 </button>
 
                 {error && (
@@ -340,7 +344,7 @@ function ForgetPassword({ onClose }) {
 
                 {success && (
                   <div className="p-3 bg-green-100 border border-green-400 text-green-700 rounded-lg text-sm animate-pulse">
-                    ✓ Password changed successfully! Redirecting...
+                    ✓ {t("auth.password_changed")}
                   </div>
                 )}
               </>

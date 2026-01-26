@@ -4,8 +4,10 @@ import ProductCard from "./ProductCard";
 import Header from "../../Shared/Header";
 import Footer from "../../Shared/Footer";
 import { fetchAllProducts } from "../../Redux/Product/AllProducts";
+import { useTranslation } from "react-i18next";
 
 function Home() {
+  const { t } = useTranslation();
   const [allProducts, setAllProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -81,7 +83,7 @@ function Home() {
             <div className="flex-1 flex items-center gap-2 mb-3">
               <input
                 type="text"
-                placeholder="Search Keywords..."
+                placeholder={t("product_list.search_placeholder")}
                 value={searchTerm}
                 onChange={handleSearchChange}
                 className="max-w-5xl w-full px-4 py-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#c0121a] bg-white text-gray-700"
