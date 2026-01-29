@@ -79,7 +79,8 @@ function OTPVerification({ email, onClose }) {
           {t("auth.otp_verification_title")}
         </h2>
         <p className="text-center text-base text-gray-700 mb-6">
-          {t("auth.otp_sent_to")}
+          Please enter the OTP which is sent to{" "}
+          <span className="font-semibold text-[#b80000]">{email}</span>
         </p>
         <form onSubmit={handleSubmit}>
           <input
@@ -90,7 +91,7 @@ function OTPVerification({ email, onClose }) {
             maxLength={6}
             style={{ letterSpacing: "0.2em" }}
             required
-            placeholder="000000"
+            placeholder={t("auth.otp_placeholder")}
           />
           {error && (
             <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg text-sm">
@@ -105,13 +106,13 @@ function OTPVerification({ email, onClose }) {
             {loading ? t("auth.verifying") : t("auth.verify_button")}
           </button>
         </form>
-        <div className="text-center mt-2 text-base">
+        {/* <div className="text-center mt-2 text-base">
           <span className="text-gray-700">{t("auth.not_received_otp")} </span>
           <span className="text-gray-700">{t("auth.resend_otp_text")} </span>
           <span className="text-[#b80000] font-semibold">
             {timer > 0 ? `00:${timer.toString().padStart(2, "0")}` : "00:00"}
           </span>
-        </div>
+        </div> */}
       </div>
 
       {/* Thank You Modal */}

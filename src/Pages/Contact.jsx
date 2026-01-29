@@ -242,7 +242,7 @@ function Contact() {
           <div className="w-full rounded-xl overflow-hidden border mt-8">
             <iframe
               title="map"
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3762.003019023872!2d-99.1749720240846!3d19.44824604067559!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d1f8c7e2e2e2e3%3A0x7e7e7e7e7e7e7e7e!2sChapultepec%20Park!5e0!3m2!1sen!2smx!4v1670000000000!5m2!1sen!2smx"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2792.8!2d-73.7218!3d45.5825!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4cc920c7e2b8e9e9%3A0x1234567890abcdef!2s4370%20Rue%20Garand%2C%20Laval%2C%20QC!5e0!3m2!1sen!2sca!4v1670000000000!5m2!1sen!2sca"
               width="100%"
               height="350"
               style={{ border: 0 }}

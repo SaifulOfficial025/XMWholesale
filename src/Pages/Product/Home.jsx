@@ -71,14 +71,14 @@ function Home() {
       <div className="bg-white min-h-screen py-8 px-2 md:px-8 ">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-8">
           {/* Sidebar */}
-          <div className="md:w-1/5 w-full">
+          <div className="w-full md:w-[250px] md:min-w-[250px] md:flex-shrink-0">
             <Sidebar
               selectedBrand={selectedBrand}
               onBrandSelect={handleBrandSelect}
             />
           </div>
           {/* Main Content */}
-          <div className="flex-1">
+          <div className="flex-1 min-w-0">
             {/* Search Bar */}
             <div className="flex-1 flex items-center gap-2 mb-3">
               <input

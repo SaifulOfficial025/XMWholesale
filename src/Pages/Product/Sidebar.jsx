@@ -24,7 +24,10 @@ function Sidebar({ selectedBrand, onBrandSelect }) {
     }
   };
   return (
-    <aside className="bg-[#f5f5f6] rounded-xl p-6 w-full max-w-xs mx-auto">
+    <aside
+      className="bg-[#f5f5f6] rounded-xl p-6 w-full max-w-xs mx-auto"
+      style={{ minWidth: "250px" }}
+    >
       <div className="flex items-center justify-between">
         <h2 className="font-bold text-lg text-gray-900">Brands</h2>
         {/* Toggle button for mobile */}
@@ -59,12 +62,11 @@ function Sidebar({ selectedBrand, onBrandSelect }) {
                     onBrandSelect(brand.name);
                     setIsExpanded(false);
                   }}
-                  className={`w-full rounded-full border-2 font-medium py-2 px-6 text-base transition-colors duration-200 ${
+                  className={`w-full rounded-full border-2 py-2 px-6 text-base transition-colors duration-200 text-center ${
                     selectedBrand === brand.name
-                      ? "border-[#c0121a] text-[#c0121a] bg-white"
-                      : "text-gray-700 bg-transparent border-gray-300 hover:border-gray-400"
+                      ? "border-[#c0121a] text-[#c0121a] bg-white font-semibold"
+                      : "text-gray-700 bg-white border-gray-300 hover:border-gray-400 font-semibold"
                   }`}
-                  style={{ fontWeight: 500 }}
                 >
                   {brand.name}
                 </button>
