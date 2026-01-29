@@ -19,6 +19,7 @@ function ProductDetails() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [showSuccess, setShowSuccess] = useState(false);
+  const { i18n } = useTranslation();
 
   useEffect(() => {
     loadProductDetails();
@@ -128,19 +129,23 @@ function ProductDetails() {
           {/* Right: Product Info */}
           <div className="flex flex-col gap-4">
             <h1 className="text-2xl font-semibold mt-2 mb-2">{product.name}</h1>
-            <div className="text-2xl font-bold text-gray-900 mb-2">
-              ${product.price}
-            </div>
+            {product.price && (
+              <div className="text-2xl font-bold text-gray-900 mb-2">
+                ${product.price}
+              </div>
+            )}
             <p className="text-gray-600 text-sm mb-2">
-              {product.description || t("product_details.no_description")}
+              {i18n.language === "fr" && product.french_description
+                ? product.french_description
+                : product.description || t("product_details.no_description")}
             </p>
             <div className=" gap-8 mb-2">
               <div className="text-sm text-gray-700">
                 <span className="font-semibold">
-                  {t("product_details.box_label")}
+                  {t("product_details.units_per_box")}
                 </span>{" "}
                 <span className="text-black font-semibold">
-                  {product.box_per_item} {t("product_details.item")}
+                  {product.units_per_box}
                 </span>
               </div>
               <div className="text-sm text-gray-700 mt-2">
@@ -151,11 +156,9 @@ function ProductDetails() {
               </div>
               <div className="text-sm text-gray-700 mt-2">
                 <span className="font-semibold">
-                  {t("product_details.quantity_label")}
+                  {t("product_details.size_label")}
                 </span>{" "}
-                <span className="text-black font-semibold">
-                  {product.quantity}
-                </span>
+                <span className="text-black font-semibold">{product.size}</span>
               </div>
               <div className="text-sm text-gray-700 mt-2">
                 <span className="font-semibold">
@@ -172,6 +175,16 @@ function ProductDetails() {
                 <span className="text-black font-semibold">
                   {product.brand}
                 </span>
+                <div className="text-sm text-gray-700 mt-2">
+                  <span className="font-semibold">
+                    {t("product_details.upc_label")}
+                  </span>{" "}
+                  <span className="text-black font-semibold">
+                    {product.upc_code && Array.isArray(product.upc_code)
+                      ? product.upc_code.join(", ")
+                      : "N/A"}
+                  </span>
+                </div>
               </div>
             </div>
             <div className="flex items-center gap-4 mt-2">

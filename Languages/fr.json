@@ -83,11 +83,14 @@
     "breadcrumb_product": "Produit",
     "breadcrumb_details": "Détails du produit",
     "box_label": "1 Boîte :",
+    "units_per_box": "Unités par boîte :",
     "item": "article",
     "sku_label": "SKU :",
     "quantity_label": "Quantité :",
+    "size_label": "Taille :",
     "category_label": "Catégorie :",
     "brand_label": "Marque :",
+    "upc_label": "UPC :",
     "quantity_select": "Quantité :",
     "boxes": "Boîtes",
     "add_to_cart": "AJOUTER AU PANIER",
@@ -194,5 +197,19 @@
   },
   "buttons": {
     "contact_us": "CONTACTEZ-NOUS"
+  },
+  "order_history": {
+    "title": "Historique des commandes",
+    "loading": "Chargement de l'historique des commandes...",
+    "error": "Échec du chargement de l'historique des commandes",
+    "try_again": "Réessayer",
+    "no_orders": "Aucune commande trouvée",
+    "order_id": "ID de commande",
+    "date": "Date",
+    "total_amount": "Montant total",
+    "order_items": "Articles de la commande",
+    "quantity": "Quantité",
+    "boxes": "boîte(s)",
+    "per_box": "/ boîte"
   }
 }

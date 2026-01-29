@@ -83,11 +83,14 @@
     "breadcrumb_product": "Product",
     "breadcrumb_details": "Product Details",
     "box_label": "1 Box:",
+    "units_per_box": "Units Per Box:",
     "item": "item",
     "sku_label": "SKU:",
     "quantity_label": "Quantity:",
+    "size_label": "Size:",
     "category_label": "Category:",
     "brand_label": "Brand:",
+    "upc_label": "UPC:",
     "quantity_select": "Quantity:",
     "boxes": "Boxes",
     "add_to_cart": "ADD TO CART",
@@ -194,5 +197,19 @@
   },
   "buttons": {
     "contact_us": "CONTACT US"
+  },
+  "order_history": {
+    "title": "Order History",
+    "loading": "Loading order history...",
+    "error": "Failed to load order history",
+    "try_again": "Try Again",
+    "no_orders": "No orders found",
+    "order_id": "Order ID",
+    "date": "Date",
+    "total_amount": "Total Amount",
+    "order_items": "Order Items",
+    "quantity": "Quantity",
+    "boxes": "box(es)",
+    "per_box": "/ box"
   }
 }

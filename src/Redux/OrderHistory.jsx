@@ -1,7 +1,7 @@
-import { BASE_URL } from "../Config";
+import { BASE_URL } from "./Config";
 
-// Fetch product details by ID
-export const fetchProductDetails = async (productId) => {
+// Fetch order history
+export const fetchOrderHistory = async () => {
   try {
     // Get access token from localStorage
     const accessToken =
@@ -18,18 +18,13 @@ export const fetchProductDetails = async (productId) => {
       headers["Authorization"] = `Bearer ${accessToken}`;
     }
 
-    const response = await fetch(
-      `${BASE_URL}/products/api/product/${productId}`,
-      {
-        method: "GET",
-        headers: headers,
-      },
-    );
+    const response = await fetch(`${BASE_URL}/products/api/order`, {
+      method: "GET",
+      headers: headers,
+    });
 
     if (!response.ok) {
-      throw new Error(
-        `Failed to fetch product details: ${response.statusText}`,
-      );
+      throw new Error(`Failed to fetch order history: ${response.statusText}`);
     }
 
     const data = await response.json();

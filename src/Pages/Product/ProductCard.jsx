@@ -36,44 +36,38 @@ function ProductCard({ product, onProductClick }) {
   };
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden w-full h-[460px] flex flex-col">
+    <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden w-full h-[360px] flex flex-col">
+      {/* Uniform image container */}
       <div
-        className="aspect-[4/3] w-full bg-gray-100 cursor-pointer"
+        className="w-full flex items-center justify-center bg-gray-100 cursor-pointer"
+        style={{ height: 180, minHeight: 180, maxHeight: 180 }}
         onClick={handleImageClick}
       >
         <img
-          src={product.img || "/categorydummyimg.png"}
-          alt={product.title || "Product"}
-          className="object-cover w-full h-full hover:opacity-80 transition-opacity"
+          src={product.primary_image || "/categorydummyimg.png"}
+          alt={product.sku || "Product"}
+          className="object-contain w-full h-full max-h-[180px] max-w-[220px] hover:opacity-80 transition-opacity"
           draggable="false"
         />
       </div>
       <div className="p-5 flex flex-col flex-1">
         <h3 className="font-bold text-lg mb-2 text-gray-900 truncate">
-          {product.title || "Product Name"}
+          {/* {product.title || "Product Name"} */}
+          SKU: {product.sku || "N/A"}
         </h3>
-        <div className="mb-1 text-base">
-          <span className="font-semibold text-gray-400">Code:</span>
-          <span className="ml-2 text-black font-semibold inline-block max-w-[12rem] align-middle truncate">
-            {product.code || "N/A"}
-          </span>
-        </div>
         <div className="mb-4 text-base">
-          <span className="font-semibold text-gray-400">Quantity:</span>
+          <span className="font-semibold text-gray-400">Size:</span>
           <span className="ml-2 text-black font-semibold inline-block max-w-[8rem] align-middle truncate">
-            {product.quantity || "N/A"}
+            {product.size || "N/A"}
           </span>
         </div>
-        {/* {showSuccess && (
-          <div className="mb-2 p-2 bg-green-100 border border-green-400 text-green-700 rounded text-xs text-center animate-pulse">
-            ✓ Added to cart
-          </div>
-        )} */}
-        <Link to={`/product/details/${product.id}`}>
-          <button className="w-full mt-auto bg-red-600 hover:bg-red-700 text-white font-semibold rounded border-2 py-2 text-base transition shadow-sm">
-            {t("product_list.add_to_cart")}
-          </button>
-        </Link>
+        <div className="mt-auto pt-4">
+          <Link to={`/product/details/${product.id}`} className="block">
+            <button className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold rounded border-2 py-2 text-base transition shadow-sm">
+              {t("product_list.add_to_cart")}
+            </button>
+          </Link>
+        </div>
       </div>
     </div>
   );

@@ -118,12 +118,10 @@ function Home() {
                       key={product.id}
                       product={{
                         id: product.id,
-                        title: product.name,
-                        code: product.code,
-                        quantity: product.quantity,
-                        img: product.primary_image,
-                        isFavorite: product.is_favorite,
-                        price: product.price,
+                        sku: product.sku,
+                        size: product.size,
+                        primary_image: product.primary_image,
+                        is_favorite: product.is_favorite,
                       }}
                       onProductClick={() =>
                         (window.location.href = `/product/details/${product.id}`)
@@ -142,7 +140,7 @@ function Home() {
                       disabled={currentPage === 1}
                       className="px-3 py-2 rounded border border-gray-300 bg-red-100 text-gray-500 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      &lt; &lt;
+                      &lt;
                     </button>
                     {Array.from({ length: totalPages }, (_, i) => i + 1).map(
                       (num) => (
@@ -166,7 +164,7 @@ function Home() {
                       disabled={currentPage === totalPages}
                       className="px-3 py-2 rounded border border-gray-300 bg-red-100 text-gray-500 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      &gt; &gt;
+                      &gt;
                     </button>
                   </div>
                 )}

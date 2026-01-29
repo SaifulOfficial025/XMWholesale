@@ -6,6 +6,7 @@ import { LuPhone } from "react-icons/lu";
 import { FaChevronDown } from "react-icons/fa";
 import SignIn from "../Pages/Authentication/SignIn";
 import Profile from "../Pages/Authentication/Profile";
+import OrderHistory from "../Pages/OrderHistory";
 import { useTranslation } from "react-i18next";
 
 function Header() {
@@ -13,6 +14,7 @@ function Header() {
   const [showSignIn, setShowSignIn] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
+  const [showOrderHistory, setShowOrderHistory] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userName, setUserName] = useState("");
@@ -154,7 +156,9 @@ function Header() {
             </Link>
 
             <button
-              onClick={() => i18n.changeLanguage(i18n.language === "en" ? "fr" : "en")}
+              onClick={() =>
+                i18n.changeLanguage(i18n.language === "en" ? "fr" : "en")
+              }
               className="bg-white text-black px-2 py-0.5 rounded-sm hover:bg-black hover:text-white transition duration-300"
             >
               {i18n.language === "en" ? "FR" : "EN"}
@@ -180,6 +184,15 @@ function Header() {
                       className="w-full text-left px-4 py-2 hover:bg-gray-100 font-semibold border-b border-gray-200"
                     >
                       Profile
+                    </button>
+                    <button
+                      onClick={() => {
+                        setShowOrderHistory(true);
+                        setShowDropdown(false);
+                      }}
+                      className="w-full text-left px-4 py-2 hover:bg-gray-100 font-semibold border-b border-gray-200"
+                    >
+                      Order History
                     </button>
                     <button
                       onClick={handleLogout}
@@ -307,6 +320,15 @@ function Header() {
             <div className="bg-white rounded-2xl shadow-xl overflow-y-auto">
               <Profile onClose={() => setShowProfile(false)} />
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal for Order History */}
+      {showOrderHistory && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 p-4">
+          <div className="relative w-full max-w-4xl mx-auto">
+            <OrderHistory onClose={() => setShowOrderHistory(false)} />
           </div>
         </div>
       )}

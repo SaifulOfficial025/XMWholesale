@@ -3,7 +3,7 @@ import { fetchCategories } from "../../Redux/Product/Category";
 import { useTranslation } from "react-i18next";
 
 function Category() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -52,14 +52,16 @@ function Category() {
               <div className="flex-1 min-h-0 aspect-square w-full bg-gray-100 flex items-center justify-center">
                 <img
                   src={cat.image}
-                  alt={cat.display_name}
+                  alt={cat.display_name || cat.name}
                   className="object-cover w-full h-full"
                   draggable="false"
                 />
               </div>
               <div className="p-4 border-t text-center bg-white flex-shrink-0">
                 <span className="font-medium text-gray-800 text-sm sm:text-base md:text-lg">
-                  {cat.display_name}
+                  {i18n.language === "fr" && cat.french_display_name
+                    ? cat.french_display_name
+                    : cat.display_name || cat.name}
                 </span>
               </div>
             </div>
