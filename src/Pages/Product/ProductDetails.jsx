@@ -20,9 +20,13 @@ function ProductDetails() {
   const [error, setError] = useState("");
   const [showSuccess, setShowSuccess] = useState(false);
   const { i18n } = useTranslation();
+  const [hasAccessToken, setHasAccessToken] = useState(false);
 
   useEffect(() => {
     loadProductDetails();
+    // Check for access token in localStorage
+    const token = localStorage.getItem("access_token");
+    setHasAccessToken(!!token);
   }, [id]);
 
   const loadProductDetails = async () => {
@@ -131,10 +135,10 @@ function ProductDetails() {
             <h1 className="text-2xl font-semibold mt-2 mb-2">{product.name}</h1>
             {product.price && (
               <div className="text-2xl font-bold text-gray-900 mb-2">
-                ${product.price}
+                Price: ${product.price}
               </div>
             )}
-            <p className="text-gray-600 text-sm mb-2">
+            <p className="text-gray-600 text-lg font-semibold mb-2">
               {i18n.language === "fr" && product.french_description
                 ? product.french_description
                 : product.description || t("product_details.no_description")}
@@ -187,46 +191,50 @@ function ProductDetails() {
                 </div>
               </div>
             </div>
-            <div className="flex items-center gap-4 mt-2">
-              <span className="text-base font-medium">
-                {t("product_details.quantity_select")}
-              </span>
-              <div className="flex items-center border rounded">
-                <button
-                  className="px-3 py-1 text-lg text-gray-700 hover:bg-gray-100"
-                  onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                >
-                  -
-                </button>
-                <span className="px-4 py-1 text-lg">{quantity}</span>
-                <button
-                  className="px-3 py-1 text-lg text-gray-700 hover:bg-gray-100"
-                  onClick={() => setQuantity((q) => q + 1)}
-                >
-                  +
-                </button>
-              </div>
-              <span className="ml-2 text-base font-medium">
-                {t("product_details.boxes")}
-              </span>
-            </div>
-            <div className="flex gap-3 mt-6">
-              <button
-                onClick={() => {
-                  addToCart(product, quantity);
-                  setShowSuccess(true);
-                  setTimeout(() => setShowSuccess(false), 2000);
-                }}
-                className="bg-black text-white font-semibold px-7 py-3 shadow hover:bg-gray-800 transition"
-              >
-                {t("product_details.add_to_cart")}
-              </button>
-              <Link to="/checkout" className="ml-3">
-                <button className="bg-[#c0121a] text-white font-semibold px-7 py-3  shadow hover:bg-[#a70c17] transition">
-                  {t("product_details.go_to_cart")}
-                </button>
-              </Link>
-            </div>
+            {hasAccessToken && (
+              <>
+                <div className="flex items-center gap-4 mt-2">
+                  <span className="text-base font-medium">
+                    {t("product_details.quantity_select")}
+                  </span>
+                  <div className="flex items-center border rounded">
+                    <button
+                      className="px-3 py-1 text-lg text-gray-700 hover:bg-gray-100"
+                      onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                    >
+                      -
+                    </button>
+                    <span className="px-4 py-1 text-lg">{quantity}</span>
+                    <button
+                      className="px-3 py-1 text-lg text-gray-700 hover:bg-gray-100"
+                      onClick={() => setQuantity((q) => q + 1)}
+                    >
+                      +
+                    </button>
+                  </div>
+                  <span className="ml-2 text-base font-medium">
+                    {t("product_details.boxes")}
+                  </span>
+                </div>
+                <div className="flex gap-3 mt-6">
+                  <button
+                    onClick={() => {
+                      addToCart(product, quantity);
+                      setShowSuccess(true);
+                      setTimeout(() => setShowSuccess(false), 2000);
+                    }}
+                    className="bg-black text-white font-semibold px-7 py-3 shadow hover:bg-gray-800 transition"
+                  >
+                    {t("product_details.add_to_cart")}
+                  </button>
+                  <Link to="/checkout" className="ml-3">
+                    <button className="bg-[#c0121a] text-white font-semibold px-7 py-3  shadow hover:bg-[#a70c17] transition">
+                      {t("product_details.go_to_cart")}
+                    </button>
+                  </Link>
+                </div>
+              </>
+            )}
             {showSuccess && (
               <div className="mt-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded-lg text-sm animate-pulse text-center">
                 ✓{" "}

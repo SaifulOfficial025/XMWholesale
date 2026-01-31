@@ -55,12 +55,12 @@ function ProductCard({ product, onProductClick }) {
           {/* {product.title || "Product Name"} */}
           SKU: {product.sku || "N/A"}
         </h3>
-        <div className="mb-4 text-base">
+        {/* <div className="mb-4 text-base">
           <span className="font-semibold text-gray-400">Size:</span>
           <span className="ml-2 text-black font-semibold inline-block max-w-[8rem] align-middle truncate">
-            {product.size || "N/A"}
+            {product.size || "Go to details"}
           </span>
-        </div>
+        </div> */}
         <div className="mt-auto pt-4">
           <Link to={`/product/details/${product.id}`} className="block">
             <button className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold rounded border-2 py-2 text-base transition shadow-sm">
