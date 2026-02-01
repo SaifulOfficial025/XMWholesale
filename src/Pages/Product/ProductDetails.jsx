@@ -246,7 +246,7 @@ function ProductDetails() {
           </div>
         </div>
       </div>
-      <div className="-mt-44">
+      <div className="md:-mt-44 mt-0">
         <Footer />
       </div>
     </section>
