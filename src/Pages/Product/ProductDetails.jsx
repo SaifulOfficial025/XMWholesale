@@ -143,27 +143,17 @@ function ProductDetails() {
                 ? product.french_description
                 : product.description || t("product_details.no_description")}
             </p>
-            <div className=" gap-8 mb-2">
+
+            <div className="gap-8 mb-2">
               <div className="text-sm text-gray-700">
                 <span className="font-semibold">
-                  {t("product_details.units_per_box")}
+                  {t("product_details.brand_label")}
                 </span>{" "}
                 <span className="text-black font-semibold">
-                  {product.units_per_box}
+                  {product.brand}
                 </span>
               </div>
-              <div className="text-sm text-gray-700 mt-2">
-                <span className="font-semibold">
-                  {t("product_details.sku_label")}
-                </span>{" "}
-                <span className="text-black font-semibold">{product.sku}</span>
-              </div>
-              <div className="text-sm text-gray-700 mt-2">
-                <span className="font-semibold">
-                  {t("product_details.size_label")}
-                </span>{" "}
-                <span className="text-black font-semibold">{product.size}</span>
-              </div>
+
               <div className="text-sm text-gray-700 mt-2">
                 <span className="font-semibold">
                   {t("product_details.category_label")}
@@ -172,23 +162,39 @@ function ProductDetails() {
                   {product.category}
                 </span>
               </div>
+
               <div className="text-sm text-gray-700 mt-2">
                 <span className="font-semibold">
-                  {t("product_details.brand_label")}
+                  {t("product_details.sku_label")}
+                </span>{" "}
+                <span className="text-black font-semibold">{product.sku}</span>
+              </div>
+
+              <div className="text-sm text-gray-700 mt-2">
+                <span className="font-semibold">
+                  {t("product_details.size_label")}
+                </span>{" "}
+                <span className="text-black font-semibold">{product.size}</span>
+              </div>
+
+              <div className="text-sm text-gray-700 mt-2">
+                <span className="font-semibold">
+                  {t("product_details.units_per_box")}
                 </span>{" "}
                 <span className="text-black font-semibold">
-                  {product.brand}
+                  {product.units_per_box}
                 </span>
-                <div className="text-sm text-gray-700 mt-2">
-                  <span className="font-semibold">
-                    {t("product_details.upc_label")}
-                  </span>{" "}
-                  <span className="text-black font-semibold">
-                    {product.upc_code && Array.isArray(product.upc_code)
-                      ? product.upc_code.join(", ")
-                      : "N/A"}
-                  </span>
-                </div>
+              </div>
+
+              <div className="text-sm text-gray-700 mt-2">
+                <span className="font-semibold">
+                  {t("product_details.upc_label")}
+                </span>{" "}
+                <span className="text-black font-semibold">
+                  {product.upc_code && Array.isArray(product.upc_code)
+                    ? product.upc_code.join(", ")
+                    : "N/A"}
+                </span>
               </div>
             </div>
             {hasAccessToken && (
