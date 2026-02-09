@@ -60,7 +60,7 @@ function ProductCard({ product, onProductClick }) {
           className="text-md mb-2 text-gray-900"
           style={{
             display: "-webkit-box",
-            WebkitLineClamp: 3,
+            WebkitLineClamp: 2,
             WebkitBoxOrient: "vertical",
             overflow: "hidden",
             textOverflow: "ellipsis",
@@ -68,13 +68,19 @@ function ProductCard({ product, onProductClick }) {
         >
           {displayedDescription}
         </p>
+        <p>
+          {/* <span className="font-semibold text-gray-400">SKU:</span>{" "} */}
+          <span className="text-black font-semibold">
+            {product.sku || "N/A"}
+          </span>
+        </p>
         {/* <div className="mb-4 text-base">
           <span className="font-semibold text-gray-400">Size:</span>
           <span className="ml-2 text-black font-semibold inline-block max-w-[8rem] align-middle truncate">
             {product.size || "Go to details"}
           </span>
         </div> */}
-        <div className="mt-auto pt-4">
+        <div className="mt-auto pt-4 pb-4">
           <Link to={`/product/details/${product.id}`} className="block">
             <button className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold rounded border-2 py-2 text-base transition shadow-sm">
               {t("product_list.add_to_cart")}
