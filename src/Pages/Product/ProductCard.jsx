@@ -44,7 +44,7 @@ function ProductCard({ product, onProductClick }) {
     <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden w-full h-[360px] flex flex-col">
       {/* Uniform image container */}
       <div
-        className="w-full flex items-center justify-center bg-gray-100 cursor-pointer"
+        className="w-full flex items-center justify-center bg-white cursor-pointer"
         style={{ height: 180, minHeight: 180, maxHeight: 180 }}
         onClick={handleImageClick}
       >

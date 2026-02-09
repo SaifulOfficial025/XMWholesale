@@ -134,40 +134,42 @@ function Home() {
 
                 {/* Pagination */}
                 {totalPages > 1 && (
-                  <div className="flex justify-center md:justify-end items-center gap-2 mt-10">
-                    <button
-                      onClick={() =>
-                        setCurrentPage(Math.max(1, currentPage - 1))
-                      }
-                      disabled={currentPage === 1}
-                      className="px-3 py-2 rounded border border-gray-300 bg-red-100 text-gray-500 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      &lt;
-                    </button>
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                      (num) => (
-                        <button
-                          key={num}
-                          onClick={() => setCurrentPage(num)}
-                          className={`px-3 py-2 rounded border text-sm font-semibold ${
-                            num === currentPage
-                              ? "bg-[#c0121a] text-white border-[#c0121a]"
-                              : "bg-red-100 text-gray-700 border-gray-300"
-                          }`}
-                        >
-                          {String(num).padStart(2, "0")}
-                        </button>
-                      ),
-                    )}
-                    <button
-                      onClick={() =>
-                        setCurrentPage(Math.min(totalPages, currentPage + 1))
-                      }
-                      disabled={currentPage === totalPages}
-                      className="px-3 py-2 rounded border border-gray-300 bg-red-100 text-gray-500 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      &gt;
-                    </button>
+                  <div className="mt-10 overflow-x-auto md:overflow-x-visible">
+                    <div className="flex justify-start md:justify-end items-center gap-2 min-w-max md:min-w-0">
+                      <button
+                        onClick={() =>
+                          setCurrentPage(Math.max(1, currentPage - 1))
+                        }
+                        disabled={currentPage === 1}
+                        className="px-3 py-2 rounded border border-gray-300 bg-red-100 text-gray-500 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        &lt;
+                      </button>
+                      {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                        (num) => (
+                          <button
+                            key={num}
+                            onClick={() => setCurrentPage(num)}
+                            className={`px-3 py-2 rounded border text-sm font-semibold ${
+                              num === currentPage
+                                ? "bg-[#c0121a] text-white border-[#c0121a]"
+                                : "bg-red-100 text-gray-700 border-gray-300"
+                            }`}
+                          >
+                            {String(num).padStart(2, "0")}
+                          </button>
+                        ),
+                      )}
+                      <button
+                        onClick={() =>
+                          setCurrentPage(Math.min(totalPages, currentPage + 1))
+                        }
+                        disabled={currentPage === totalPages}
+                        className="px-3 py-2 rounded border border-gray-300 bg-red-100 text-gray-500 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        &gt;
+                      </button>
+                    </div>
                   </div>
                 )}
               </>
