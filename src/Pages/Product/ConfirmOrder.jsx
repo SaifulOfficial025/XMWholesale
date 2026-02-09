@@ -31,12 +31,16 @@ function ConfirmOrder() {
       // Prepare order payload
       const orderPayload = {
         total_amount: getCartTotal().toString(),
-        items: cartItems.map((item) => ({
-          product: item.id,
-          quantity: item.quantity,
-          unit_price: item.price,
-          total_price: (parseFloat(item.price) * item.quantity).toString(),
-        })),
+        items: cartItems.map((item) => {
+          const unitsPerBox = item.units_per_box || 1;
+          const unitsCount = item.quantity * unitsPerBox; // convert boxes -> units
+          return {
+            product: item.id,
+            quantity: unitsCount,
+            unit_price: item.price,
+            total_price: (parseFloat(item.price) * unitsCount).toString(),
+          };
+        }),
       };
 
       console.log("Placing order:", orderPayload);
@@ -151,7 +155,12 @@ function ConfirmOrder() {
                       {item.name}
                     </h2>
                     <div className="text-xl md:text-2xl font-bold text-gray-900">
-                      ${(parseFloat(item.price) * item.quantity).toFixed(2)}
+                      $
+                      {(
+                        parseFloat(item.price) *
+                        item.quantity *
+                        (item.units_per_box || 1)
+                      ).toFixed(2)}
                     </div>
                   </div>
                   <div className="text-sm text-gray-600 mb-2">

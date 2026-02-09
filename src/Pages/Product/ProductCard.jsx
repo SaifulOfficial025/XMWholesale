@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 function ProductCard({ product, onProductClick }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { addToCart } = useCart();
   const navigate = useNavigate();
   const [showSuccess, setShowSuccess] = useState(false);
@@ -35,6 +35,11 @@ function ProductCard({ product, onProductClick }) {
     setTimeout(() => setShowSuccess(false), 2000);
   };
 
+  const displayedDescription =
+    i18n && i18n.language === "fr" && product.french_description
+      ? product.french_description
+      : product.description || "N/A";
+
   return (
     <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden w-full h-[360px] flex flex-col">
       {/* Uniform image container */}
@@ -51,10 +56,18 @@ function ProductCard({ product, onProductClick }) {
         />
       </div>
       <div className="p-5 flex flex-col flex-1">
-        <h3 className="font-bold text-lg mb-2 text-gray-900 truncate">
-          {/* {product.title || "Product Name"} */}
-          SKU: {product.sku || "N/A"}
-        </h3>
+        <p
+          className="text-md mb-2 text-gray-900"
+          style={{
+            display: "-webkit-box",
+            WebkitLineClamp: 3,
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+        >
+          {displayedDescription}
+        </p>
         {/* <div className="mb-4 text-base">
           <span className="font-semibold text-gray-400">Size:</span>
           <span className="ml-2 text-black font-semibold inline-block max-w-[8rem] align-middle truncate">

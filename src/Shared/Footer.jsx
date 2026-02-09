@@ -12,7 +12,7 @@ function Footer() {
           <img
             src="/xmlogo.png"
             alt="XM Wholesale"
-            className="w-24 h-24 object-contain mb-2"
+            className="w-24 h-24 object-contain mb-2 -mt-4"
           />
           <p className="text-gray-300 text-sm leading-relaxed max-w-xs -mt-10">
             {t("footer.company_desc")}

@@ -102,7 +102,7 @@ function ProductDetails() {
               <img
                 src={images[selectedImg]}
                 alt={product.name}
-                className="object-cover w-full h-full"
+                className="object-fill w-full h-full"
                 draggable="false"
               />
             </div>
@@ -121,7 +121,7 @@ function ProductDetails() {
                     <img
                       src={img}
                       alt="thumb"
-                      className="object-cover w-full h-full"
+                      className="object-fill w-full h-full"
                       draggable="false"
                     />
                   </button>
@@ -192,7 +192,14 @@ function ProductDetails() {
                 </span>{" "}
                 <span className="text-black font-semibold">
                   {product.upc_code && Array.isArray(product.upc_code)
-                    ? product.upc_code.join(", ")
+                    ? product.upc_code
+                        .map((code) =>
+                          typeof code === "string"
+                            ? code.replace(/[^0-9]/g, "")
+                            : String(code),
+                        )
+                        .filter(Boolean)
+                        .join(", ")
                     : "N/A"}
                 </span>
               </div>

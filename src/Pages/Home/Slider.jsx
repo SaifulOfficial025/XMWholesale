@@ -35,8 +35,13 @@ function Slider() {
     <div className="max-w-7xl mx-auto px-4 mt-16">
       <div className="relative rounded-md shadow-sm">
         <div
-          className="w-full h-56 sm:h-56 md:h-72 lg:h-[580px] bg-center bg-cover"
-          style={{ backgroundImage: `url(${slides[index]})` }}
+          className="w-full h-56 sm:h-56 md:h-72 lg:h-[580px] bg-center"
+          style={{
+            backgroundImage: `url(${slides[index]})`,
+            backgroundSize: "100% 100%",
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "center",
+          }}
         />
 
         {/* Left arrow */}

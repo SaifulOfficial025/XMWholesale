@@ -15,7 +15,10 @@ function Sidebar({ selectedBrand, onBrandSelect }) {
     try {
       setLoading(true);
       const data = await fetchBrands();
-      setBrands(data);
+      const sorted = Array.isArray(data)
+        ? data.slice().sort((a, b) => a.name.localeCompare(b.name))
+        : [];
+      setBrands(sorted);
     } catch (err) {
       setError(err.message || "Failed to load brands");
       console.error("Error loading brands:", err);

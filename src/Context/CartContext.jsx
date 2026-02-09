@@ -89,10 +89,11 @@ export const CartProvider = ({ children }) => {
   };
 
   const getCartTotal = () => {
-    return cartItems.reduce(
-      (total, item) => total + parseFloat(item.price) * item.quantity,
-      0,
-    );
+    return cartItems.reduce((total, item) => {
+      const unitsPerBox = item.units_per_box || 1;
+      const unitsCount = item.quantity * unitsPerBox; // item.quantity represents boxes
+      return total + parseFloat(item.price) * unitsCount;
+    }, 0);
   };
 
   const getCartCount = () => {

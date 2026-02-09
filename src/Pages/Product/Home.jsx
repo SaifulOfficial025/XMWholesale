@@ -119,6 +119,8 @@ function Home() {
                       product={{
                         id: product.id,
                         sku: product.sku,
+                        description: product.description,
+                        french_description: product.french_description,
                         size: product.size,
                         primary_image: product.primary_image,
                         is_favorite: product.is_favorite,
