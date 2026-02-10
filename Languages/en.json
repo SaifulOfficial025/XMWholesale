@@ -2,7 +2,7 @@
   "navbar": {
     "home": "HOME",
     "product": "PRODUCT",
-    "about": "ABOUT",
+    "about": "ABOUT US",
     "call_us": "Call Us Now:",
     "phone_number": "514-354-7777"
   },
@@ -31,8 +31,8 @@
     "address_country": "Canada",
     "info_title": "Information",
     "link_home": "Home",
-    "link_about": "About",
-    "link_contact_us": "Contact us"
+    "link_about": "About Us",
+    "link_contact_us": "Contact Us"
   },
   "contact": {
     "page_title": "Contact Us",
