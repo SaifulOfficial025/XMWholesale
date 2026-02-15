@@ -14,7 +14,7 @@ function About() {
       <div className="bg-white min-h-screen py-10 px-2 md:px-8">
         <div className="max-w-7xl mx-auto">
           {/* About Us Title */}
-          <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold text-[#c0121a] text-center mb-1">
+          <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold text-[#c0121a] text-center mb-10">
             {t("about.page_title")}
           </h1>
           {/* <div className="text-center text-gray-500 text-sm sm:text-base md:text-lg mb-10 max-w-2xl mx-auto">

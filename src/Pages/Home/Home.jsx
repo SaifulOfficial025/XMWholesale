@@ -9,7 +9,9 @@ import Slider from "./Slider";
 const Home = () => {
   return (
     <div>
-      <Header />
+      <div className="bg-black py-8">
+        <Header />
+      </div>
       <Hero />
       <Slider />
       <Category />

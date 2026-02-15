@@ -6,7 +6,7 @@ function Hero() {
   return (
     <section
       className="min-h-screen bg-cover bg-center relative flex items-center"
-      // style={{ backgroundImage: "url(/herobg.png)" }}
+      style={{ backgroundImage: "url(/herobg.png)" }}
     >
       <div className="absolute inset-0"></div>
 

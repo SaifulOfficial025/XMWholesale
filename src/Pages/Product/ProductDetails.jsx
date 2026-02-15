@@ -108,7 +108,7 @@ function ProductDetails() {
         <div className="max-w-7xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 gap-10">
           {/* Left: Image Gallery */}
           <div>
-            <div className="rounded-xl overflow-hidden bg-gray-100 mb-4 aspect-[4/4] w-full">
+            <div className="rounded-xl overflow-hidden bg-gray-100 mb-32 aspect-[4/4] w-full ">
               <img
                 src={images[selectedImg]}
                 alt={product.name}
