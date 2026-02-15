@@ -116,14 +116,17 @@ function Contact() {
                 {t("contact.follow_us")}
               </div>
               <div className="flex gap-4 text-2xl">
-                <a href="#" className="text-[#1877f3] hover:opacity-80">
+                <a
+                  href="https://www.facebook.com/profile.php?id=61588029932534"
+                  className="text-[#1877f3] hover:opacity-80"
+                >
                   <FaFacebook />
                 </a>
-                <a href="#" className="text-[#e4405f] hover:opacity-80">
+                <a
+                  href="https://www.instagram.com/xmwholesale"
+                  className="text-[#e4405f] hover:opacity-80"
+                >
                   <FaInstagram />
-                </a>
-                <a href="#" className="text-[#1da1f2] hover:opacity-80">
-                  <FaTwitter />
                 </a>
               </div>
             </div>

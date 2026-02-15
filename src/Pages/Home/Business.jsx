@@ -2,6 +2,7 @@ import React from "react";
 import { IoMdArrowRoundForward } from "react-icons/io";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { FaFacebook, FaInstagram } from "react-icons/fa";
 
 function Business() {
   const { t } = useTranslation();
@@ -14,6 +15,20 @@ function Business() {
         <p className="text-white text-sm md:text-base opacity-90 max-w-md mx-auto md:mx-0">
           {t("hero_and_banners.talk_business_desc")}
         </p>
+        <div className="flex gap-4 text-4xl mt-5">
+          <a
+            href="https://www.facebook.com/profile.php?id=61588029932534"
+            className="text-[#fff] hover:opacity-80"
+          >
+            <FaFacebook />
+          </a>
+          <a
+            href="https://www.instagram.com/xmwholesale"
+            className="text-[#fff] hover:opacity-80"
+          >
+            <FaInstagram />
+          </a>
+        </div>
       </div>
       <Link to="/contact">
         <button className="bg-white text-[#9f0712] font-semibold px-6 py-2  shadow text-sm md:text-base flex items-center gap-2 hover:bg-gray-100 transition w-full md:w-auto justify-center mt-4 md:mt-0">

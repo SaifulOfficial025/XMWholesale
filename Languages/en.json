@@ -1,13 +1,13 @@
 {
   "navbar": {
     "home": "HOME",
-    "product": "PRODUCT",
+    "product": "PRODUCTS",
     "about": "ABOUT US",
     "call_us": "Call Us Now:",
     "phone_number": "514-354-7777"
   },
   "hero_and_banners": {
-    "see_all_products": "SEE ALL PRODUCT",
+    "see_all_products": "SEE ALL PRODUCTS",
     "discover_category": "DISCOVER OUR PRODUCT CATEGORY",
     "talk_business_title": "Let's Talk Business",
     "talk_business_desc": "Ready to elevate your inventory? Start a conversation with our wholesale team today.",

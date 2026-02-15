@@ -16,7 +16,9 @@ function Category() {
     try {
       setLoading(true);
       const data = await fetchCategories();
-      setCategories(data);
+      // Filter out categories without images
+      const categoriesWithImages = data.filter((cat) => cat.image);
+      setCategories(categoriesWithImages);
     } catch (err) {
       setError(err.message || "Failed to load categories");
       console.error("Error loading categories:", err);

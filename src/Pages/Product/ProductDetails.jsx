@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../../Shared/Header";
 import Footer from "../../Shared/Footer";
-import { FaArrowRight } from "react-icons/fa6";
+import { FaArrowRight, FaArrowLeft } from "react-icons/fa6";
 import { Link, useParams } from "react-router-dom";
 import { fetchProductDetails } from "../../Redux/Product/ProductDetails";
 import { useCart } from "../../Context/CartContext";
@@ -85,20 +85,30 @@ function ProductDetails() {
       <div className="bg-black py-8">
         <Header />
       </div>
-      <div className="bg-white min-h-screen py-8 px-2 md:px-8">
-        {/* Breadcrumbs */}
-        <div className="max-w-7xl mx-auto w-full  flex items-center justify-between mb-2">
-          <nav className="text-xs text-gray-500  gap-1 flex items-center justify-center">
-            <span>{t("product_details.breadcrumb_product")}</span>
-            <FaArrowRight className=" justify-center" />
-            <span>{t("product_details.breadcrumb_details")}</span>
-          </nav>
+      <div className="bg-white min-h-screen py-8 px-2 md:px-8 mb-20">
+        {/* Back Button and Breadcrumbs */}
+        <div className="max-w-7xl mx-auto w-full mb-6">
+          <button
+            onClick={() => navigate(-1)}
+            className="flex items-center gap-2 text-gray-700 bg-white border border-gray-900 px-3 py-2 hover:text-black font-medium mb-4 transition-colors"
+          >
+            <FaArrowLeft className="text-lg" />
+            <span>{"Back"}</span>
+          </button>
+
+          <div className="flex items-center justify-between">
+            <nav className="text-xs text-gray-500 gap-1 flex items-center justify-center">
+              <span>{t("product_details.breadcrumb_product")}</span>
+              <FaArrowRight className="justify-center" />
+              <span>{t("product_details.breadcrumb_details")}</span>
+            </nav>
+          </div>
           <hr className="my-4" />
         </div>
         <div className="max-w-7xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 gap-10">
           {/* Left: Image Gallery */}
           <div>
-            <div className="rounded-xl overflow-hidden bg-gray-100 mb-4 aspect-[4/3] w-full">
+            <div className="rounded-xl overflow-hidden bg-gray-100 mb-4 aspect-[4/4] w-full">
               <img
                 src={images[selectedImg]}
                 alt={product.name}

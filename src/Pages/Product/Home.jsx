@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import ProductCard from "./ProductCard";
 import Header from "../../Shared/Header";
@@ -8,12 +9,19 @@ import { useTranslation } from "react-i18next";
 
 function Home() {
   const { t } = useTranslation();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [allProducts, setAllProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedBrand, setSelectedBrand] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState(
+    searchParams.get("search") || "",
+  );
+  const [selectedBrand, setSelectedBrand] = useState(
+    searchParams.get("brand") || null,
+  );
+  const [currentPage, setCurrentPage] = useState(
+    parseInt(searchParams.get("page")) || 1,
+  );
   const [totalCount, setTotalCount] = useState(0);
   const itemsPerPage = 12;
 
@@ -49,14 +57,25 @@ function Home() {
 
   // Handle search input change
   const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
-    setCurrentPage(1); // Reset to page 1 when search changes
+    const newSearch = e.target.value;
+    setSearchTerm(newSearch);
+    setCurrentPage(1);
+    const params = {};
+    if (newSearch) params.search = newSearch;
+    if (selectedBrand) params.brand = selectedBrand;
+    params.page = "1";
+    setSearchParams(params);
   };
 
   // Handle brand selection change
   const handleBrandSelect = (brand) => {
     setSelectedBrand(brand);
-    setCurrentPage(1); // Reset to page 1 when brand changes
+    setCurrentPage(1);
+    const params = {};
+    if (searchTerm) params.search = searchTerm;
+    if (brand) params.brand = brand;
+    params.page = "1";
+    setSearchParams(params);
   };
 
   // Pagination
@@ -125,9 +144,6 @@ function Home() {
                         primary_image: product.primary_image,
                         is_favorite: product.is_favorite,
                       }}
-                      onProductClick={() =>
-                        (window.location.href = `/product/details/${product.id}`)
-                      }
                     />
                   ))}
                 </div>
@@ -137,9 +153,15 @@ function Home() {
                   <div className="mt-10 overflow-x-auto md:overflow-x-visible">
                     <div className="flex justify-start md:justify-end items-center gap-2 min-w-max md:min-w-0">
                       <button
-                        onClick={() =>
-                          setCurrentPage(Math.max(1, currentPage - 1))
-                        }
+                        onClick={() => {
+                          const newPage = Math.max(1, currentPage - 1);
+                          setCurrentPage(newPage);
+                          const params = {};
+                          if (searchTerm) params.search = searchTerm;
+                          if (selectedBrand) params.brand = selectedBrand;
+                          params.page = String(newPage);
+                          setSearchParams(params);
+                        }}
                         disabled={currentPage === 1}
                         className="px-3 py-2 rounded border border-gray-300 bg-red-100 text-gray-500 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                       >
@@ -149,7 +171,14 @@ function Home() {
                         (num) => (
                           <button
                             key={num}
-                            onClick={() => setCurrentPage(num)}
+                            onClick={() => {
+                              setCurrentPage(num);
+                              const params = {};
+                              if (searchTerm) params.search = searchTerm;
+                              if (selectedBrand) params.brand = selectedBrand;
+                              params.page = String(num);
+                              setSearchParams(params);
+                            }}
                             className={`px-3 py-2 rounded border text-sm font-semibold ${
                               num === currentPage
                                 ? "bg-[#c0121a] text-white border-[#c0121a]"
@@ -161,9 +190,15 @@ function Home() {
                         ),
                       )}
                       <button
-                        onClick={() =>
-                          setCurrentPage(Math.min(totalPages, currentPage + 1))
-                        }
+                        onClick={() => {
+                          const newPage = Math.min(totalPages, currentPage + 1);
+                          setCurrentPage(newPage);
+                          const params = {};
+                          if (searchTerm) params.search = searchTerm;
+                          if (selectedBrand) params.brand = selectedBrand;
+                          params.page = String(newPage);
+                          setSearchParams(params);
+                        }}
                         disabled={currentPage === totalPages}
                         className="px-3 py-2 rounded border border-gray-300 bg-red-100 text-gray-500 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                       >
