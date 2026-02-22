@@ -19,6 +19,9 @@ function Home() {
   const [selectedBrand, setSelectedBrand] = useState(
     searchParams.get("brand") || null,
   );
+  const [selectedCategory, setSelectedCategory] = useState(
+    searchParams.get("category") || null,
+  );
   const [currentPage, setCurrentPage] = useState(
     parseInt(searchParams.get("page")) || 1,
   );
@@ -28,7 +31,7 @@ function Home() {
   // Load products when any filter changes
   useEffect(() => {
     loadProducts();
-  }, [searchTerm, selectedBrand, currentPage]);
+  }, [searchTerm, selectedBrand, selectedCategory, currentPage]);
 
   const loadProducts = async () => {
     try {
@@ -43,6 +46,7 @@ function Home() {
 
       if (searchTerm) params.search = searchTerm;
       if (selectedBrand) params.brand = selectedBrand;
+      if (selectedCategory) params.category = selectedCategory;
 
       const data = await fetchAllProducts(params);
       setAllProducts(data.results || []);
@@ -63,6 +67,7 @@ function Home() {
     const params = {};
     if (newSearch) params.search = newSearch;
     if (selectedBrand) params.brand = selectedBrand;
+    if (selectedCategory) params.category = selectedCategory;
     params.page = "1";
     setSearchParams(params);
   };
@@ -74,6 +79,7 @@ function Home() {
     const params = {};
     if (searchTerm) params.search = searchTerm;
     if (brand) params.brand = brand;
+    if (selectedCategory) params.category = selectedCategory;
     params.page = "1";
     setSearchParams(params);
   };
@@ -159,6 +165,8 @@ function Home() {
                           const params = {};
                           if (searchTerm) params.search = searchTerm;
                           if (selectedBrand) params.brand = selectedBrand;
+                          if (selectedCategory)
+                            params.category = selectedCategory;
                           params.page = String(newPage);
                           setSearchParams(params);
                         }}
@@ -176,6 +184,8 @@ function Home() {
                               const params = {};
                               if (searchTerm) params.search = searchTerm;
                               if (selectedBrand) params.brand = selectedBrand;
+                              if (selectedCategory)
+                                params.category = selectedCategory;
                               params.page = String(num);
                               setSearchParams(params);
                             }}
@@ -196,6 +206,8 @@ function Home() {
                           const params = {};
                           if (searchTerm) params.search = searchTerm;
                           if (selectedBrand) params.brand = selectedBrand;
+                          if (selectedCategory)
+                            params.category = selectedCategory;
                           params.page = String(newPage);
                           setSearchParams(params);
                         }}

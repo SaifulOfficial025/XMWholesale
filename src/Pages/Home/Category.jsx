@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { fetchCategories } from "../../Redux/Product/Category";
 import { useTranslation } from "react-i18next";
 
 function Category() {
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -25,6 +27,10 @@ function Category() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleCategoryClick = (categoryName) => {
+    navigate(`/products?category=${encodeURIComponent(categoryName)}`);
   };
   return (
     <div className="max-w-7xl mx-auto px-4 mt-16">
@@ -49,13 +55,14 @@ function Category() {
           {categories.map((cat) => (
             <div
               key={cat.id}
-              className="max-h-52 md:max-h-72 bg-white rounded-md overflow-hidden flex flex-col shadow-sm md:hover:scale-110 transition-transform duration-300"
+              onClick={() => handleCategoryClick(cat.name)}
+              className="max-h-[270px] md:max-h-72 bg-white rounded-md overflow-hidden flex flex-col shadow-sm md:hover:scale-110 transition-transform duration-300 cursor-pointer"
             >
               <div className="flex-1 min-h-0 aspect-square w-full bg-gray-100 flex items-center justify-center">
                 <img
                   src={cat.image}
                   alt={cat.display_name || cat.name}
-                  className="object-cover w-full h-full"
+                  className="object-fill w-full h-full"
                   draggable="false"
                 />
               </div>

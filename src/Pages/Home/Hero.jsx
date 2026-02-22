@@ -5,7 +5,7 @@ function Hero() {
   const { t } = useTranslation();
   return (
     <section
-      className="min-h-screen bg-cover bg-center relative flex items-center"
+      className="h-[450px] md:min-h-screen bg-cover bg-center relative flex items-center"
       style={{ backgroundImage: "url(/herobg.png)" }}
     >
       <div className="absolute inset-0"></div>
@@ -16,7 +16,7 @@ function Hero() {
         </h1>
         <div className="text-red-500 text-4xl font-bold -mt-2">Wholesale</div> */}
 
-        <div className="mt-10">
+        <div className="md:mt-10 -mt-36">
           <a
             href="/products"
             className="inline-block bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-3 shadow mt-96"

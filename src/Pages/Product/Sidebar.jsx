@@ -46,9 +46,9 @@ function Sidebar({ selectedBrand, onBrandSelect }) {
 
       {/* Brands list - hidden on mobile by default, visible on desktop */}
       <div
-        className={`overflow-hidden transition-all duration-300 ${
-          isExpanded ? "max-h-96" : "max-h-0 md:max-h-none"
-        } md:max-h-none`}
+        className={`transition-all duration-300 ${
+          isExpanded ? "max-h-[60vh] overflow-auto" : "max-h-0 overflow-hidden"
+        } md:max-h-none md:overflow-visible`}
       >
         {loading ? (
           <p className="text-gray-600 text-sm">Loading brands...</p>
@@ -58,6 +58,21 @@ function Sidebar({ selectedBrand, onBrandSelect }) {
           <p className="text-gray-600 text-sm">No brands found</p>
         ) : (
           <ul className="flex flex-col gap-3">
+            <li key="all">
+              <button
+                onClick={() => {
+                  onBrandSelect(null);
+                  setIsExpanded(false);
+                }}
+                className={`w-full rounded-full border-2 py-2 px-6 text-base transition-colors duration-200 text-center ${
+                  selectedBrand === null
+                    ? "border-[#c0121a] text-[#c0121a] bg-white font-semibold"
+                    : "text-gray-700 bg-white border-gray-300 hover:border-gray-400 font-semibold"
+                }`}
+              >
+                Show All
+              </button>
+            </li>
             {brands.map((brand) => (
               <li key={brand.id}>
                 <button
