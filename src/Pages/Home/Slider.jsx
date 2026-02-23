@@ -32,7 +32,7 @@ function Slider() {
   }, []);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 md:mt-16 -mt-10">
+    <div className="max-w-7xl mx-auto px-4 md:mt-16 mt-10">
       <div className="relative rounded-md shadow-sm">
         <div
           className="w-full h-56 sm:h-56 md:h-72 lg:h-[580px] bg-center"

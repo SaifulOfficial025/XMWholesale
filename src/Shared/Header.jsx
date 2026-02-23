@@ -95,6 +95,13 @@ function Header() {
       <header className="absolute top-0 left-0 w-full z-50">
         <div className="max-w-7xl mx-auto px-2 py-4 flex items-center justify-between">
           <nav className="hidden sm:flex items-center gap-8 text-white">
+            <Link to="/">
+              <img
+                src="/xmlogo.png"
+                alt="XM Logo"
+                className="h-10 w-auto ml-4 object-contain"
+              />
+            </Link>
             <ul className="flex items-center gap-8 font-semibold uppercase tracking-wide">
               <li>
                 <NavLink
@@ -229,6 +236,15 @@ function Header() {
 
             <nav>
               <ul className="flex flex-col gap-4 font-semibold uppercase tracking-wide mt-10">
+                <li>
+                  <Link to="/">
+                    <img
+                      src="/xmlogo.png"
+                      alt="XM Logo"
+                      className="h-10 w-auto mt-5 object-contain"
+                    />
+                  </Link>
+                </li>
                 <li>
                   <NavLink
                     to="/"

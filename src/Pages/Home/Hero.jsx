@@ -5,21 +5,18 @@ function Hero() {
   const { t } = useTranslation();
   return (
     <section
-      className="h-[450px] md:min-h-screen bg-cover bg-center relative flex items-center"
-      style={{ backgroundImage: "url(/herobg.png)" }}
+      className="w-11/12 md:w-3/4 lg:w-2/3 mx-auto h-56 md:h-72 lg:h-96 bg-cover bg-center relative flex items-center justify-center rounded-lg overflow-hidden"
+      style={{
+        backgroundImage: "url(/herobg.png)",
+      }}
     >
       <div className="absolute inset-0"></div>
 
-      <div className="relative z-10 w-full max-w-4xl mx-auto text-center px-6 py-24">
-        {/* <h1 className="text-white font-extrabold tracking-tight text-[8rem] leading-[1] md:text-[12rem]">
-          XM
-        </h1>
-        <div className="text-red-500 text-4xl font-bold -mt-2">Wholesale</div> */}
-
-        <div className="md:mt-10 -mt-36">
+      <div className="relative z-10 w-full max-w-3xl mx-auto text-center px-6 py-12">
+        <div className="mt-0">
           <a
             href="/products"
-            className="inline-block bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-3 shadow mt-96"
+            className="inline-block bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-3 shadow"
           >
             {t("hero_and_banners.see_all_products")}
           </a>

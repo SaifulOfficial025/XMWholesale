@@ -12,7 +12,7 @@ const Home = () => {
       <div className="bg-black py-8">
         <Header />
       </div>
-      <Hero />
+      {/* <Hero /> */}
       <Slider />
       <Category />
       <Business />
