@@ -89,15 +89,15 @@ export const CartProvider = ({ children }) => {
   };
 
   const getCartTotal = () => {
+    // item.quantity is stored as units (not boxes), so total is unit_price * quantity
     return cartItems.reduce((total, item) => {
-      const unitsPerBox = item.units_per_box || 1;
-      const unitsCount = item.quantity * unitsPerBox; // item.quantity represents boxes
-      return total + parseFloat(item.price) * unitsCount;
+      return total + parseFloat(item.price) * (item.quantity || 0);
     }, 0);
   };
 
   const getCartCount = () => {
-    return cartItems.reduce((count, item) => count + item.quantity, 0);
+    // total number of units in cart
+    return cartItems.reduce((count, item) => count + (item.quantity || 0), 0);
   };
 
   return (

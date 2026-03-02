@@ -9,8 +9,14 @@ import { useTranslation } from "react-i18next";
 
 function ConfirmOrder() {
   const { t } = useTranslation();
-  const { cartItems, removeFromCart, updateQuantity, getCartTotal, clearCart } =
-    useCart();
+  const {
+    cartItems,
+    removeFromCart,
+    updateQuantity,
+    getCartTotal,
+    clearCart,
+    getCartCount,
+  } = useCart();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -32,13 +38,11 @@ function ConfirmOrder() {
       const orderPayload = {
         total_amount: getCartTotal().toString(),
         items: cartItems.map((item) => {
-          const unitsPerBox = item.units_per_box || 1;
-          const unitsCount = item.quantity * unitsPerBox; // convert boxes -> units
           return {
             product: item.id,
-            quantity: unitsCount,
+            quantity: item.quantity, // quantity is in units
             unit_price: item.price,
-            total_price: (parseFloat(item.price) * unitsCount).toString(),
+            total_price: (parseFloat(item.price) * item.quantity).toString(),
           };
         }),
       };
@@ -155,12 +159,7 @@ function ConfirmOrder() {
                       {item.name}
                     </h2>
                     <div className="text-xl md:text-2xl font-bold text-gray-900">
-                      $
-                      {(
-                        parseFloat(item.price) *
-                        item.quantity *
-                        (item.units_per_box || 1)
-                      ).toFixed(2)}
+                      ${(parseFloat(item.price) * item.quantity).toFixed(2)}
                     </div>
                   </div>
                   <div className="text-sm text-gray-600 mb-2">
@@ -170,8 +169,7 @@ function ConfirmOrder() {
                     |
                     <span className="ml-2">
                       {t("checkout.price_label")} $
-                      {parseFloat(item.price).toFixed(2)}
-                      {t("checkout.per_box")}
+                      {parseFloat(item.price).toFixed(2)} / unit
                     </span>
                   </div>
                   <div className="flex items-center gap-4 mt-2">
@@ -190,9 +188,27 @@ function ConfirmOrder() {
                       >
                         -
                       </button>
-                      <span className="px-3 py-1 text-sm font-medium">
-                        {item.quantity}
-                      </span>
+                      <input
+                        type="number"
+                        value={item.quantity}
+                        min={1}
+                        onChange={(e) => {
+                          const val = parseInt(e.target.value, 10);
+                          if (!isNaN(val) && val > 0) {
+                            updateQuantity(item.id, val);
+                          }
+                        }}
+                        onBlur={(e) => {
+                          const val = parseInt(e.target.value, 10);
+                          if (isNaN(val) || val < 1) {
+                            updateQuantity(item.id, 1);
+                          }
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") e.currentTarget.blur();
+                        }}
+                        className="w-20 px-3 py-1 text-sm text-center outline-none"
+                      />
                       <button
                         onClick={() =>
                           updateQuantity(item.id, item.quantity + 1)
@@ -203,7 +219,7 @@ function ConfirmOrder() {
                       </button>
                     </div>
                     <span className="text-sm text-gray-700">
-                      {t("checkout.boxes")}
+                      unit{item.quantity !== 1 ? "s" : ""}
                     </span>
                   </div>
                 </div>
@@ -228,7 +244,7 @@ function ConfirmOrder() {
                   </div>
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-gray-600">{t("checkout.items")}</span>
-                    <span className="font-semibold">{cartItems.length}</span>
+                    <span className="font-semibold">{getCartCount()}</span>
                   </div>
                 </div>
                 <div className="border-t border-gray-200 pt-4 mb-2">

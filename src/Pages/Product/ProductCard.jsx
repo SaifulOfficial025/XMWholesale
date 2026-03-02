@@ -64,6 +64,7 @@ function ProductCard({ product, onProductClick }) {
             WebkitBoxOrient: "vertical",
             overflow: "hidden",
             textOverflow: "ellipsis",
+            minHeight: "3rem",
           }}
         >
           {displayedDescription}
