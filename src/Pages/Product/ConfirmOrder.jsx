@@ -36,13 +36,18 @@ function ConfirmOrder() {
 
       // Prepare order payload
       const orderPayload = {
-        total_amount: getCartTotal().toString(),
+        total_amount: getCartTotal().toFixed(2),
         items: cartItems.map((item) => {
+          const unitsPerBox = item.units_per_box || 1;
           return {
             product: item.id,
-            quantity: item.quantity, // quantity is in units
-            unit_price: item.price,
-            total_price: (parseFloat(item.price) * item.quantity).toString(),
+            quantity: item.quantity, // quantity is in boxes
+            unit_price: parseFloat(item.price).toFixed(2),
+            total_price: (
+              parseFloat(item.price) *
+              unitsPerBox *
+              item.quantity
+            ).toFixed(2),
           };
         }),
       };
@@ -159,7 +164,12 @@ function ConfirmOrder() {
                       {item.name}
                     </h2>
                     <div className="text-xl md:text-2xl font-bold text-gray-900">
-                      ${(parseFloat(item.price) * item.quantity).toFixed(2)}
+                      $
+                      {(
+                        parseFloat(item.price) *
+                        (item.units_per_box || 1) *
+                        item.quantity
+                      ).toFixed(2)}
                     </div>
                   </div>
                   <div className="text-sm text-gray-600 mb-2">
@@ -219,7 +229,7 @@ function ConfirmOrder() {
                       </button>
                     </div>
                     <span className="text-sm text-gray-700">
-                      unit{item.quantity !== 1 ? "s" : ""}
+                      box{item.quantity !== 1 ? "es" : ""}
                     </span>
                   </div>
                 </div>
