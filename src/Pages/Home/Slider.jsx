@@ -1,18 +1,28 @@
 import React, { useState, useEffect } from "react";
 import { IoChevronBackOutline, IoChevronForwardOutline } from "react-icons/io5";
 import { IoMdArrowRoundForward } from "react-icons/io";
-import slider1 from "../../../public/slider1.JPG";
-import slider2 from "../../../public/slider2.JPG";
-import slider3 from "../../../public/slider3.JPG";
-import slider4 from "../../../public/slider4.JPG";
-import slider5 from "../../../public/slider5.JPG";
-import slider6 from "../../../public/slider6.JPG";
-import slider7 from "../../../public/slider7.JPG";
-
-const slides = [slider1, slider2, slider3, slider4, slider5, slider6, slider7];
+import { BASE_URL } from "../../Redux/Config";
 
 function Slider() {
   const [index, setIndex] = useState(0);
+  const [slides, setSlides] = useState([]);
+
+  // Fetch sliders from API
+  useEffect(() => {
+    const fetchSliders = async () => {
+      try {
+        const response = await fetch(`${BASE_URL}/products/api/sliders`);
+        const data = await response.json();
+        // Sort by order_index and extract image URLs
+        const sortedSlides = data.sort((a, b) => a.order_index - b.order_index);
+        setSlides(sortedSlides.map((slide) => slide.image));
+      } catch (error) {
+        console.error("Error fetching sliders:", error);
+      }
+    };
+
+    fetchSliders();
+  }, []);
 
   function prev() {
     setIndex((i) => (i - 1 + slides.length) % slides.length);
@@ -24,12 +34,25 @@ function Slider() {
 
   // Auto-advance slides every 3 seconds
   useEffect(() => {
+    if (slides.length === 0) return;
+
     const timer = setInterval(() => {
       setIndex((i) => (i + 1) % slides.length);
     }, 3000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [slides.length]);
+
+  // Don't render if no slides are loaded yet
+  if (slides.length === 0) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 md:mt-16 mt-10">
+        <div className="relative rounded-md shadow-sm">
+          <div className="w-full h-56 sm:h-56 md:h-72 lg:h-[580px] bg-gray-200 animate-pulse rounded-md" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 md:mt-16 mt-10">
