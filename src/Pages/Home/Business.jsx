@@ -17,7 +17,7 @@ function Business() {
         </p>
         <div className="flex gap-4 text-4xl mt-5">
           <a
-            href="https://www.facebook.com/profile.php?id=61588029932534"
+            href="https://www.facebook.com/profile.php?id=61579479352687"
             className="text-[#fff] hover:opacity-80"
           >
             <FaFacebook />

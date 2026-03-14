@@ -117,7 +117,7 @@ function Contact() {
               </div>
               <div className="flex gap-4 text-2xl">
                 <a
-                  href="https://www.facebook.com/profile.php?id=61588029932534"
+                  href="https://www.facebook.com/profile.php?id=61579479352687"
                   className="text-[#1877f3] hover:opacity-80"
                 >
                   <FaFacebook />
